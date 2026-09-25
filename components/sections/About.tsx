@@ -5,7 +5,15 @@ import { content } from "@/lib/content";
 import { useReducedMotion } from "@/lib/useReducedMotion";
 import { gsap, registerGsap } from "@/lib/animations/gsap";
 import ScrambleText from "@/components/ui/ScrambleText";
+import CountUp from "@/components/ui/CountUp";
 import GitHubActivity from "@/components/sections/GitHubActivity";
+
+const STATS = [
+  { value: content.stats.githubRepoCount, suffix: "+", label: "Public Repositories" },
+  { value: content.projects.length, suffix: "", label: "Featured Projects" },
+  { value: content.techStack.length, suffix: "", label: "Core Technologies" },
+  { value: content.stats.hackathonsCompeted, suffix: "", label: "Hackathons Competed" },
+] as const;
 
 export default function About() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -87,6 +95,18 @@ export default function About() {
           </li>
         ))}
       </ul>
+      <div className="mt-12 grid grid-cols-2 gap-6 border-t border-accent/10 pt-8 sm:grid-cols-4">
+        {STATS.map((stat) => (
+          <div key={stat.label}>
+            <p className="font-[family-name:var(--font-display)] text-3xl font-bold text-text-primary md:text-4xl">
+              <CountUp value={stat.value} suffix={stat.suffix} />
+            </p>
+            <p className="mt-1 text-xs uppercase tracking-[0.15em] text-text-secondary">
+              {stat.label}
+            </p>
+          </div>
+        ))}
+      </div>
       <GitHubActivity />
     </section>
   );

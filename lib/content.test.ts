@@ -35,4 +35,9 @@ describe("content", () => {
     expect(content.social.instagram).toBeTruthy();
     expect(content.social.twitter).toBeTruthy();
   });
+
+  it("has real, positive stats", () => {
+    expect(content.stats.githubRepoCount).toBeGreaterThan(0);
+    expect(content.stats.hackathonsCompeted).toBeGreaterThan(0);
+  });
 });

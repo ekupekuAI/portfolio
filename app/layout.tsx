@@ -6,6 +6,7 @@ import ScrollProgress from "@/components/layout/ScrollProgress";
 import AmbientBackground from "@/components/layout/AmbientBackground";
 import CursorSpotlight from "@/components/layout/CursorSpotlight";
 import CommandPalette from "@/components/layout/CommandPalette";
+import Preloader from "@/components/layout/Preloader";
 import "./globals.css";
 
 const display = Space_Grotesk({
@@ -46,6 +47,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ScrollProgress />
         <CustomCursor />
         <CommandPalette />
+        <Preloader />
         {children}
       </body>
     </html>

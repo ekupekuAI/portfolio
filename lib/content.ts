@@ -15,6 +15,11 @@ export interface SocialLinks {
   twitter: string;
 }
 
+export interface Stats {
+  githubRepoCount: number;
+  hackathonsCompeted: number;
+}
+
 export interface SiteContent {
   name: string;
   role: string;
@@ -24,6 +29,7 @@ export interface SiteContent {
   projects: Project[];
   social: SocialLinks;
   resumeUrl: string;
+  stats: Stats;
 }
 
 // NOTE: real bio (condensed from Ekansh's own written background), real tech stack
@@ -120,4 +126,12 @@ export const content: SiteContent = {
     twitter: "https://twitter.com/Ekanshxd",
   },
   resumeUrl: "/resume-placeholder.txt",
+  // Real, verifiable numbers only — repoCount from his actual GitHub profile,
+  // hackathonsCompeted from his own bio (NexVerse 2026 + the 200+ team blockchain/
+  // cybersecurity hackathon). projects/techStack counts are derived below, not
+  // hardcoded, so they can't drift out of sync with the arrays above.
+  stats: {
+    githubRepoCount: 17,
+    hackathonsCompeted: 2,
+  },
 };
