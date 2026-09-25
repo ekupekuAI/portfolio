@@ -176,6 +176,7 @@ export default function CommandPalette() {
             transition={{ duration: 0.15 }}
             onClick={(e) => e.stopPropagation()}
             role="dialog"
+            aria-modal="true"
             aria-label="Command palette"
           >
             <input
@@ -184,7 +185,8 @@ export default function CommandPalette() {
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={handleInputKeydown}
               placeholder="Type a command or search…"
-              className="w-full border-b border-accent/20 bg-transparent px-4 py-3 text-text-primary outline-none placeholder:text-text-secondary"
+              aria-label="Search commands"
+              className="w-full border-b border-accent/20 bg-transparent px-4 py-3 text-text-primary outline-none placeholder:text-text-secondary focus:border-accent"
             />
             <div className="max-h-80 overflow-y-auto py-2">
               {filtered.length === 0 && (

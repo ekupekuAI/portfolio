@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Space_Grotesk, Inter } from "next/font/google";
 import { content } from "@/lib/content";
 import CustomCursor from "@/components/layout/CustomCursor";
@@ -21,6 +21,11 @@ const body = Inter({
 });
 
 const description = `${content.bioLead} ${content.bio}`;
+
+export const viewport: Viewport = {
+  themeColor: "#0a0a0f",
+  colorScheme: "dark",
+};
 
 export const metadata: Metadata = {
   // Needed for the og:image URL to resolve to an absolute path once deployed. Set

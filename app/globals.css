@@ -7,12 +7,56 @@
   --color-text-secondary: #9a9aa5;
   --color-accent: #00e5ff;
   --color-accent2: #ff8a3d;
+  --color-danger: #ff6b6b;
+  /* Section rhythm: one clamp used by every section instead of a fixed py-32. */
+  --spacing-section: clamp(5rem, 12vw, 10rem);
+  /* One label style for every uppercase eyebrow/meta line. */
+  --tracking-label: 0.12em;
+}
+
+html {
+  color-scheme: dark;
+  scroll-behavior: smooth;
 }
 
 html,
 body {
   background-color: var(--color-bg-primary);
   color: var(--color-text-primary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Keyboard focus must be visible on a near-black page. The browser default
+   (dark auto outline) is invisible here, so every focusable element gets the accent. */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--color-accent) 35%, transparent);
+  color: var(--color-text-primary);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklab, var(--color-text-secondary) 40%, transparent) transparent;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
 }
 
 @keyframes marquee-scroll {
