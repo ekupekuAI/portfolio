@@ -35,9 +35,16 @@ export default function Contact() {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    // Capture the form element itself synchronously, before any `await` — reading
+    // e.currentTarget again after an async gap is a known React footgun (it can be
+    // null/stale by the time execution resumes), and that's exactly what was
+    // happening here: the email was sending successfully every time, but
+    // formEl.reset() (via the stale e.currentTarget) threw, landing in the catch
+    // block and showing a false "network error" even on full success.
+    const formEl = e.currentTarget;
     setStatus("sending");
     setErrorMessage("");
-    const form = new FormData(e.currentTarget);
+    const form = new FormData(formEl);
     const payload = {
       name: String(form.get("name") ?? ""),
       email: String(form.get("email") ?? ""),
@@ -54,14 +61,19 @@ export default function Contact() {
       const data = await res.json();
       if (data.ok) {
         setStatus("success");
-        e.currentTarget.reset();
+        formEl.reset();
       } else {
         setStatus("error");
         setErrorMessage(data.error ?? "Something went wrong.");
       }
-    } catch {
+    } catch (err) {
       setStatus("error");
       setErrorMessage("Network error — please try again or email directly.");
+      // Surface the real cause in dev — a silently-swallowed catch is exactly what
+      // hid this bug in the first place.
+      if (process.env.NODE_ENV !== "production") {
+        console.error("Contact form submit failed:", err);
+      }
     }
   }
 
