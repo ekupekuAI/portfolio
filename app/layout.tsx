@@ -4,6 +4,8 @@ import { content } from "@/lib/content";
 import CustomCursor from "@/components/layout/CustomCursor";
 import ScrollProgress from "@/components/layout/ScrollProgress";
 import CommandPalette from "@/components/layout/CommandPalette";
+import Boot from "@/components/layout/Boot";
+import Grain from "@/components/layout/Grain";
 import "./globals.css";
 
 const display = Space_Grotesk({
@@ -46,6 +48,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body
         className={`${display.variable} ${body.variable} font-[family-name:var(--font-body)] bg-bg-primary text-text-primary antialiased`}
       >
+        <Boot />
+        <Grain />
         <ScrollProgress />
         <CustomCursor />
         <CommandPalette />

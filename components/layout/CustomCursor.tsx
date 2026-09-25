@@ -4,25 +4,32 @@ import { useEffect, useState } from "react";
 import { motion, useMotionValue, useSpring } from "motion/react";
 import { isTouchDevice } from "@/lib/isTouchDevice";
 
-type Mode = "default" | "hover" | "view";
+const LABELS: Record<string, string> = {
+  view: "VIEW →",
+  open: "OPEN →",
+  explore: "EXPLORE →",
+  github: "GITHUB →",
+};
 
-const BASE = 16; // px; every other state is a scale of this, so nothing animates layout
+type Mode = { kind: "default" } | { kind: "hover" } | { kind: "label"; text: string };
+
+const BASE = 16; // px; every state is a scale of this, so nothing animates layout
 
 /**
- * A cursor that does a job: it grows over interactive elements, and over featured
- * project covers (`data-cursor="view"`) it becomes a "View" badge, so the cover
- * reads as clickable without a hover overlay in the layout.
+ * A cursor that says what a click will do. `data-cursor="view|open|explore|github"`
+ * on any element turns it into a labelled badge; other interactive elements
+ * enlarge it; everywhere else it is a small ring.
  */
 export default function CustomCursor() {
   const [enabled, setEnabled] = useState(false);
-  const [mode, setMode] = useState<Mode>("default");
+  const [mode, setMode] = useState<Mode>({ kind: "default" });
   const x = useMotionValue(-100);
   const y = useMotionValue(-100);
   const springX = useSpring(x, { stiffness: 500, damping: 40 });
   const springY = useSpring(y, { stiffness: 500, damping: 40 });
 
   useEffect(() => {
-    if (isTouchDevice()) return; // stays disabled entirely on touch devices
+    if (isTouchDevice()) return;
     setEnabled(true);
 
     const move = (e: PointerEvent) => {
@@ -31,9 +38,11 @@ export default function CustomCursor() {
     };
     const over = (e: PointerEvent) => {
       const target = e.target as HTMLElement;
-      if (target.closest('[data-cursor="view"]')) setMode("view");
-      else if (target.closest("a, button, [data-cursor-hover]")) setMode("hover");
-      else setMode("default");
+      const labelled = target.closest<HTMLElement>("[data-cursor]");
+      const key = labelled?.dataset.cursor;
+      if (key && LABELS[key]) setMode({ kind: "label", text: LABELS[key] });
+      else if (target.closest("a, button, [data-cursor-hover]")) setMode({ kind: "hover" });
+      else setMode({ kind: "default" });
     };
 
     window.addEventListener("pointermove", move);
@@ -46,40 +55,32 @@ export default function CustomCursor() {
 
   if (!enabled) return null;
 
-  const scale = mode === "view" ? 4.5 : mode === "hover" ? 3 : 1;
+  const isLabel = mode.kind === "label";
+  const scale = isLabel ? 5 : mode.kind === "hover" ? 2.5 : 1;
 
   return (
     <motion.div
       aria-hidden
       className={`pointer-events-none fixed left-0 top-0 z-[9999] flex items-center justify-center rounded-full border border-accent ${
-        mode === "view" ? "" : "mix-blend-difference"
+        isLabel ? "" : "mix-blend-difference"
       }`}
-      style={{
-        width: BASE,
-        height: BASE,
-        x: springX,
-        y: springY,
-        translateX: "-50%",
-        translateY: "-50%",
-      }}
+      style={{ width: BASE, height: BASE, x: springX, y: springY, translateX: "-50%", translateY: "-50%" }}
       animate={{
         scale,
-        backgroundColor:
-          mode === "view"
-            ? "rgba(0,229,255,1)"
-            : mode === "hover"
-              ? "rgba(0,229,255,0.3)"
-              : "rgba(0,229,255,0)",
+        backgroundColor: isLabel
+          ? "rgba(0,229,255,1)"
+          : mode.kind === "hover"
+            ? "rgba(0,229,255,0.25)"
+            : "rgba(0,229,255,0)",
       }}
       transition={{ duration: 0.2 }}
     >
-      {/* Counter-scaled so the label stays legible at any cursor scale. */}
       <motion.span
-        className="font-[family-name:var(--font-display)] text-[3.5px] font-bold text-bg-primary"
-        animate={{ opacity: mode === "view" ? 1 : 0 }}
+        className="whitespace-nowrap font-[family-name:var(--font-display)] text-[2.6px] font-bold tracking-[0.06em] text-bg-primary"
+        animate={{ opacity: isLabel ? 1 : 0 }}
         transition={{ duration: 0.15 }}
       >
-        View
+        {isLabel ? mode.text : ""}
       </motion.span>
     </motion.div>
   );

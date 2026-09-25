@@ -55,11 +55,21 @@ h3 {
   text-wrap: balance;
 }
 
+/* One translucent surface, used where a tile needs to sit above the scene. */
+.surface-glass {
+  background: color-mix(in oklab, var(--color-bg-secondary) 72%, transparent);
+  border: 1px solid color-mix(in oklab, var(--color-text-secondary) 18%, transparent);
+  backdrop-filter: blur(10px);
+}
+
 /* Reveal targets start hidden and are animated in by GSAP. If scripting is off,
    nothing must stay hidden behind an animation that will never run. */
 @media (scripting: none) {
   [data-reveal],
-  [data-letter] {
+  [data-letter],
+  [data-column],
+  [data-step],
+  [data-visual] {
     opacity: 1 !important;
     transform: none !important;
   }

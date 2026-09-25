@@ -4,13 +4,14 @@ import { useEffect, useRef } from "react";
 import { content } from "@/lib/content";
 import { useReducedMotion } from "@/lib/useReducedMotion";
 import { gsap, registerGsap } from "@/lib/animations/gsap";
-import ParticleField from "@/components/hero/ParticleField";
+import { BOOT_COMPLETE_EVENT } from "@/components/layout/Boot";
+import SystemCore from "@/components/hero/SystemCore";
 import Magnetic from "@/components/ui/Magnetic";
 
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
   const reducedMotion = useReducedMotion();
-  const letters = Array.from(content.name);
+  const letters = Array.from(content.name.toUpperCase());
 
   useEffect(() => {
     registerGsap();
@@ -18,112 +19,144 @@ export default function Hero() {
     if (!root) return;
     const letterEls = root.querySelectorAll<HTMLElement>("[data-letter]");
     const rest = root.querySelectorAll<HTMLElement>("[data-reveal]");
+    const nameEl = root.querySelector<HTMLElement>("[data-name]");
+    const textBlock = root.querySelector<HTMLElement>("[data-text]");
+    const visual = root.querySelector<HTMLElement>("[data-visual]");
 
     if (reducedMotion) {
-      // gsap.set() applies synchronously, unlike tl.set() on a fresh timeline (which
-      // only takes effect on GSAP's next ticker tick) — this path must never leave
-      // content sitting at its opacity-0 default even briefly, since it exists
-      // specifically for users who asked for no motion.
       gsap.set(letterEls, { y: 0, yPercent: 0 });
       gsap.set(rest, { opacity: 1, y: 0 });
+      gsap.set(visual, { opacity: 1 });
       return;
     }
 
-    // gsap.context() + ctx.revert(): React Strict Mode double-invokes effects, and two
-    // timelines fighting over the same elements visibly stalls the entrance.
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
-      // The letters ship with an inline translateY(110%) so the name is hidden before
-      // hydration. GSAP parses that into a pixel `y`, which would survive a yPercent
-      // tween and leave the name stuck off-screen — so the from-state explicitly zeroes
-      // `y` and re-expresses the offset as yPercent (same visual position, no jump).
-      tl.fromTo(
-        letterEls,
-        { y: 0, yPercent: 110 },
-        { yPercent: 0, duration: 1, stagger: 0.05 },
-        0.1
-      ).fromTo(
-        rest,
-        { opacity: 0, y: 18 },
-        { opacity: 1, y: 0, duration: 0.7, stagger: 0.1 },
-        "-=0.6"
-      );
+      const entrance = gsap.timeline({ paused: true, defaults: { ease: "power4.out" } });
+      // Inline translateY(110%) hides the letters before hydration; GSAP parses that
+      // into a pixel `y`, so the from-state zeroes it and re-expresses it as yPercent.
+      entrance
+        .fromTo(letterEls, { y: 0, yPercent: 110 }, { yPercent: 0, duration: 1, stagger: 0.045 }, 0)
+        .fromTo(rest, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.7, stagger: 0.1 }, 0.35)
+        .fromTo(visual, { opacity: 0, scale: 0.94 }, { opacity: 1, scale: 1, duration: 1.2 }, 0.2);
+
+      const start = () => entrance.play();
+      if (document.documentElement.dataset.booting) {
+        window.addEventListener(BOOT_COMPLETE_EVENT, start, { once: true });
+      } else {
+        start();
+      }
+
+      // Scroll-out: the name recedes and the block drifts up slower than the page,
+      // so leaving the hero feels like moving past it rather than cutting away.
+      gsap.to(nameEl, {
+        scale: 0.86,
+        opacity: 0.15,
+        transformOrigin: "left center",
+        ease: "none",
+        scrollTrigger: { trigger: root, start: "top top", end: "bottom top", scrub: true },
+      });
+      gsap.to(textBlock, {
+        yPercent: 18,
+        ease: "none",
+        scrollTrigger: { trigger: root, start: "top top", end: "bottom top", scrub: true },
+      });
+      gsap.to(visual, {
+        yPercent: -12,
+        opacity: 0.2,
+        ease: "none",
+        scrollTrigger: { trigger: root, start: "top top", end: "bottom top", scrub: true },
+      });
     }, root);
 
-    return () => ctx.revert();
+    return () => {
+      ctx.revert();
+    };
   }, [reducedMotion]);
 
   return (
     <section
       ref={sectionRef}
       id="hero"
-      className="relative flex min-h-svh flex-col items-center justify-center overflow-hidden px-6 text-center"
+      data-scene-bg="#0a0a0f"
+      className="relative flex min-h-svh items-center overflow-hidden px-6 pt-24 pb-16 md:px-12 md:pt-20 md:pb-10"
     >
-      <div className="absolute inset-0 opacity-70">
-        <ParticleField />
-      </div>
-      {/* Darkens the centre so the name reads over the field without a glow or halo. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_55%_at_50%_50%,rgba(10,10,15,0.85),rgba(10,10,15,0)_100%)]"
-      />
-
-      <div className="relative z-10 flex max-w-4xl flex-col items-center">
-        <p data-reveal className="text-sm font-medium text-accent opacity-0 md:text-base">
-          {content.role}
-        </p>
-
-        <h1
-          aria-label={content.name}
-          className="mt-4 overflow-hidden whitespace-nowrap font-[family-name:var(--font-display)] text-[clamp(3.75rem,15vw,11rem)] font-bold leading-[0.95] tracking-[-0.03em] text-text-primary"
-        >
-          {letters.map((ch, i) => (
-            <span
-              key={i}
-              data-letter
-              aria-hidden
-              className="inline-block will-change-transform"
-              style={{ transform: "translateY(110%)" }}
-            >
-              {ch === " " ? " " : ch}
-            </span>
-          ))}
-        </h1>
-
-        <p
-          data-reveal
-          className="mt-8 max-w-2xl text-lg leading-relaxed text-text-primary/85 opacity-0 md:text-2xl"
-        >
-          {content.claim}
-        </p>
-
-        <div
-          data-reveal
-          className="mt-10 flex flex-col items-center gap-4 opacity-0 sm:flex-row sm:gap-5"
-        >
-          <Magnetic>
-            <a
-              href="#projects"
-              data-cursor-hover
-              className="inline-flex min-h-12 items-center rounded-md bg-accent px-6 font-semibold text-bg-primary transition-opacity hover:opacity-90"
-            >
-              See the work ↓
-            </a>
-          </Magnetic>
-          <a
-            href="#contact"
-            data-cursor-hover
-            className="inline-flex min-h-12 items-center rounded-md border border-text-secondary/40 px-6 font-semibold text-text-primary transition-colors hover:border-accent hover:text-accent"
+      <div className="mx-auto grid w-full max-w-7xl items-center gap-10 md:grid-cols-[1.05fr_1fr] md:gap-8">
+        <div data-text className="relative z-10">
+          <p
+            data-reveal
+            className="font-[family-name:var(--font-display)] text-xs font-medium tracking-[0.3em] text-accent opacity-0 md:text-sm"
           >
-            Get in touch
-          </a>
+            {content.tagline}
+          </p>
+
+          <h1
+            data-name
+            aria-label={content.name}
+            className="mt-5 flex overflow-hidden font-[family-name:var(--font-display)] text-[clamp(4rem,10.5vw,10rem)] font-bold leading-[0.92] tracking-[-0.04em] text-text-primary"
+          >
+            {letters.map((ch, i) => (
+              <span
+                key={i}
+                data-letter
+                aria-hidden
+                className="inline-block will-change-transform"
+                style={{ transform: "translateY(110%)" }}
+              >
+                {ch}
+              </span>
+            ))}
+          </h1>
+
+          <p
+            data-reveal
+            className="mt-7 max-w-md text-lg leading-relaxed text-text-primary/85 opacity-0 md:text-2xl"
+          >
+            {content.claim}
+          </p>
+
+          <div data-reveal className="mt-9 flex flex-wrap items-center gap-4 opacity-0">
+            <Magnetic>
+              <a
+                href="#work"
+                data-cursor="view"
+                className="inline-flex min-h-12 items-center gap-2 rounded-md bg-accent px-6 font-[family-name:var(--font-display)] text-sm font-bold uppercase tracking-[0.12em] text-bg-primary transition-opacity hover:opacity-90"
+              >
+                View my work
+              </a>
+            </Magnetic>
+            <a
+              href={content.social.github}
+              target="_blank"
+              rel="noreferrer"
+              data-cursor="github"
+              className="inline-flex min-h-12 items-center gap-2 rounded-md border border-text-secondary/35 px-6 font-[family-name:var(--font-display)] text-sm font-bold uppercase tracking-[0.12em] text-text-primary transition-colors hover:border-accent hover:text-accent"
+            >
+              GitHub ↗
+            </a>
+          </div>
+
+          <p data-reveal className="mt-8 flex items-center gap-2 text-sm text-text-secondary opacity-0">
+            <span className="inline-block h-1.5 w-1.5 rounded-full bg-accent" aria-hidden />
+            {content.availability}
+          </p>
         </div>
 
-        <p data-reveal className="mt-8 text-sm text-text-secondary opacity-0">
-          <span className="mr-2 inline-block h-2 w-2 rounded-full bg-accent align-middle" aria-hidden />
-          {content.availability}
-        </p>
+        <div
+          data-visual
+          className="relative mx-auto aspect-square w-full max-w-[340px] opacity-0 md:max-w-[560px]"
+        >
+          <SystemCore />
+        </div>
       </div>
+
+      <p
+        data-reveal
+        aria-hidden
+        className="absolute bottom-6 left-6 hidden items-center gap-3 text-xs uppercase tracking-[var(--tracking-label)] text-text-secondary opacity-0 md:left-12 md:flex"
+      >
+        <span className="h-px w-8 bg-text-secondary/40" />
+        Scroll
+      </p>
     </section>
   );
 }
