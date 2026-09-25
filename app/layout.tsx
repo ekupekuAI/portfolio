@@ -16,12 +16,14 @@ const body = Inter({
   variable: "--font-body",
 });
 
+const description = `${content.bioLead} ${content.bio}`;
+
 export const metadata: Metadata = {
   title: `${content.name} — ${content.role}`,
-  description: content.bio,
+  description,
   openGraph: {
     title: `${content.name} — ${content.role}`,
-    description: content.bio,
+    description,
     type: "website",
   },
 };

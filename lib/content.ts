@@ -1,6 +1,7 @@
 export interface Project {
   id: string;
   title: string;
+  category: string;
   description: string;
   image: string;
   liveUrl?: string;
@@ -17,6 +18,7 @@ export interface SocialLinks {
 export interface SiteContent {
   name: string;
   role: string;
+  bioLead: string;
   bio: string;
   techStack: string[];
   projects: Project[];
@@ -32,7 +34,9 @@ export interface SiteContent {
 export const content: SiteContent = {
   name: "Ekansh",
   role: "Full-Stack Developer & AI Engineer",
-  bio: "Computer Science Engineering student who builds software end-to-end — from idea and architecture to a working, deployed product. Strongest across the full loop: understanding a problem, designing the system, integrating frontend, backend, database, and AI models, debugging, shipping, and presenting it. Most effective in ambiguous problem spaces where the solution isn't handed to him. 3rd Prize, NexVerse Hackathon 2026 (Aurora University); competed in a 200+ team, 24-hour Blockchain + Cybersecurity hackathon. Currently sharpening DSA, system design, and production backend engineering — open to Software, Full-Stack, Backend, and AI Engineering internships.",
+  bioLead:
+    "I'm a Computer Science Engineering student who builds software end-to-end — from idea and architecture to a working, deployed product.",
+  bio: "Strongest across the full loop: understanding a problem, designing the system, integrating frontend, backend, database, and AI models, debugging, shipping, and presenting it. Most effective in ambiguous problem spaces where the solution isn't handed to him. 3rd Prize, NexVerse Hackathon 2026 (Aurora University); competed in a 200+ team, 24-hour Blockchain + Cybersecurity hackathon. Currently sharpening DSA, system design, and production backend engineering — open to Software, Full-Stack, Backend, and AI Engineering internships.",
   techStack: [
     "React",
     "TypeScript",
@@ -45,8 +49,28 @@ export const content: SiteContent = {
   ],
   projects: [
     {
+      id: "trustvision",
+      title: "TrustVision",
+      category: "SIH Hackathon",
+      description:
+        "An offline, air-gapped integrity-assurance system for defense computer-vision pipelines — verifies datasets, models, and inference outputs (duplicate/backdoor/out-of-distribution detection) and issues a signed, evidence-backed trust verdict with a tamper-proof audit log. Built for Smart India Hackathon (SIH).",
+      image: "/projects/placeholder.svg",
+      repoUrl: "https://github.com/ekupekuAI/AISecurity26228",
+    },
+    {
+      id: "nyayapath",
+      title: "NyayaPath",
+      category: "Legal AI",
+      description:
+        "An independent, citizen-first case-understanding tool that turns synthetic court case updates into a timeline, a plain-language explanation, and the next known step. Uses synthetic demo data; not an official government service and doesn't provide legal advice.",
+      image: "/projects/placeholder.svg",
+      repoUrl: "https://github.com/ekupekuAI/NyayaPath",
+      liveUrl: "https://nyaya-path-coral.vercel.app",
+    },
+    {
       id: "sentinel-id",
       title: "SentinelID",
+      category: "Supply Chain Security",
       description:
         "A trust & verification system for AI/software supply chains — integrity checking, tamper-evidence, and traceability for the components a project depends on.",
       image: "/projects/placeholder.svg",
@@ -55,6 +79,7 @@ export const content: SiteContent = {
     {
       id: "student-command-center",
       title: "Student Command Center",
+      category: "Full-Stack",
       description:
         "A full-stack personal study command center (React + FastAPI + PostgreSQL) with subjects, tasks, notes, study-session tracking, and a per-user AI study assistant — JWT auth, per-user data isolation, and production-hardened rate limiting.",
       image: "/projects/placeholder.svg",
@@ -63,18 +88,11 @@ export const content: SiteContent = {
     {
       id: "ai-dropout-prediction",
       title: "AI Dropout Prediction",
+      category: "Applied ML",
       description:
         "Predicts at-risk students and recommends interventions, rather than just flagging risk.",
       image: "/projects/placeholder.svg",
       // No public repo found for this one — add repoUrl/liveUrl here once you have a link.
-    },
-    {
-      id: "trustvision",
-      title: "TrustVision",
-      description:
-        "An offline, air-gapped integrity-assurance system for defense computer-vision pipelines — verifies datasets, models, and inference outputs (duplicate/backdoor/out-of-distribution detection) and issues a signed, evidence-backed trust verdict with a tamper-proof audit log. Built for Smart India Hackathon (SIH).",
-      image: "/projects/placeholder.svg",
-      repoUrl: "https://github.com/ekupekuAI/AISecurity26228",
     },
   ],
   social: {

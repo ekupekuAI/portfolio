@@ -7,6 +7,7 @@ import { gsap, registerGsap } from "@/lib/animations/gsap";
 
 export default function About() {
   const sectionRef = useRef<HTMLElement>(null);
+  const leadRef = useRef<HTMLParagraphElement>(null);
   const bioRef = useRef<HTMLParagraphElement>(null);
   const stackRef = useRef<HTMLUListElement>(null);
   const reducedMotion = useReducedMotion();
@@ -16,19 +17,32 @@ export default function About() {
     const items = stackRef.current?.querySelectorAll("li") ?? [];
 
     if (reducedMotion) {
-      gsap.set([bioRef.current, ...Array.from(items)], { opacity: 1, y: 0 });
+      gsap.set([leadRef.current, bioRef.current, ...Array.from(items)], {
+        opacity: 1,
+        y: 0,
+      });
       return;
     }
 
     const ctx = gsap.context(() => {
       gsap.fromTo(
-        bioRef.current,
+        leadRef.current,
         { opacity: 0, y: 30 },
         {
           opacity: 1,
           y: 0,
           duration: 0.8,
           scrollTrigger: { trigger: sectionRef.current, start: "top 70%" },
+        }
+      );
+      gsap.fromTo(
+        bioRef.current,
+        { opacity: 0, y: 20 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          scrollTrigger: { trigger: bioRef.current, start: "top 80%" },
         }
       );
       gsap.fromTo(
@@ -49,9 +63,13 @@ export default function About() {
 
   return (
     <section ref={sectionRef} id="about" className="mx-auto max-w-3xl px-6 py-32">
-      <h2 className="font-[family-name:var(--font-display)] text-4xl font-bold text-text-primary md:text-5xl">
-        About
-      </h2>
+      <p className="text-sm uppercase tracking-[0.3em] text-accent2">01 — About</p>
+      <p
+        ref={leadRef}
+        className="mt-4 font-[family-name:var(--font-display)] text-3xl font-bold leading-snug text-text-primary opacity-0 md:text-5xl"
+      >
+        {content.bioLead}
+      </p>
       <p ref={bioRef} className="mt-6 text-lg text-text-secondary opacity-0 md:text-xl">
         {content.bio}
       </p>

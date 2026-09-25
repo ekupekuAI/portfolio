@@ -7,13 +7,30 @@ import { useIsMobile } from "@/lib/useIsMobile";
 import { useReducedMotion } from "@/lib/useReducedMotion";
 import { gsap, registerGsap } from "@/lib/animations/gsap";
 
-function ProjectCard({ project }: { project: (typeof content.projects)[number] }) {
+function ProjectCard({
+  project,
+  index,
+  total,
+}: {
+  project: (typeof content.projects)[number];
+  index: number;
+  total: number;
+}) {
+  const number = String(index + 1).padStart(2, "0");
+  const totalStr = String(total).padStart(2, "0");
+
   return (
     <div
       className="group w-[80vw] flex-shrink-0 rounded-lg border border-accent/20 bg-bg-secondary p-6 transition-all duration-300 hover:-translate-y-2 hover:border-accent hover:shadow-[0_0_30px_rgba(0,229,255,0.25)] md:w-[480px]"
       data-cursor-hover
     >
-      <div className="relative aspect-[3/2] w-full overflow-hidden rounded-md">
+      <div className="flex items-center justify-between text-xs uppercase tracking-[0.2em] text-accent2">
+        <span>{project.category}</span>
+        <span className="text-text-secondary">
+          {number} / {totalStr}
+        </span>
+      </div>
+      <div className="relative mt-4 aspect-[3/2] w-full overflow-hidden rounded-md">
         <Image
           src={project.image}
           alt={project.title}
@@ -75,9 +92,12 @@ export default function Projects() {
 
   return (
     <section ref={sectionRef} id="projects" className="relative overflow-hidden py-32">
-      <h2 className="mb-12 px-6 font-[family-name:var(--font-display)] text-4xl font-bold text-text-primary md:text-5xl">
-        Projects
-      </h2>
+      <div className="mb-12 px-6">
+        <p className="text-sm uppercase tracking-[0.3em] text-accent2">02 — Selected Work</p>
+        <h2 className="mt-2 font-[family-name:var(--font-display)] text-4xl font-bold text-text-primary md:text-5xl">
+          Projects
+        </h2>
+      </div>
       <div
         ref={trackRef}
         className={
@@ -86,9 +106,9 @@ export default function Projects() {
             : "flex gap-6 px-6"
         }
       >
-        {content.projects.map((project) => (
+        {content.projects.map((project, index) => (
           <div key={project.id} className={isMobile ? "snap-start" : ""}>
-            <ProjectCard project={project} />
+            <ProjectCard project={project} index={index} total={content.projects.length} />
           </div>
         ))}
       </div>
