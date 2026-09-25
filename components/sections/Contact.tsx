@@ -97,7 +97,7 @@ export default function Contact() {
             data-reveal
             className="flex items-center gap-3 text-xs uppercase tracking-[var(--tracking-label)] text-text-secondary opacity-0"
           >
-            <span className="font-[family-name:var(--font-display)] tabular-nums text-accent">07</span>
+            <span className="font-[family-name:var(--font-display)] tabular-nums text-accent">06</span>
             <span aria-hidden className="h-px w-8 bg-text-secondary/30" />
             <span>Contact</span>
           </p>

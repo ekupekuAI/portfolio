@@ -47,7 +47,7 @@ export default function Nav() {
       </a>
       <nav
         aria-label="Primary"
-        className="fixed left-0 right-0 top-0 z-50 flex items-center justify-between px-4 py-3 backdrop-blur-sm md:px-6"
+        className="fixed left-0 right-0 top-0 z-50 flex items-center justify-between bg-gradient-to-b from-bg-primary via-bg-primary/80 to-transparent px-4 pb-6 pt-3 md:px-6"
       >
         <a
           href="#hero"

@@ -25,7 +25,6 @@ function buildCommands(): Command[] {
     { id: "nav-work", label: "Go to Work", group: "Navigate", action: navigate("work") },
     { id: "nav-lab", label: "Go to The Lab", group: "Navigate", action: navigate("lab") },
     { id: "nav-stack", label: "Go to Stack", group: "Navigate", action: navigate("stack") },
-    { id: "nav-journey", label: "Go to Journey", group: "Navigate", action: navigate("journey") },
     { id: "nav-contact", label: "Go to Contact", group: "Navigate", action: navigate("contact") },
     ...(hasRealResume(content.resumeUrl)
       ? [

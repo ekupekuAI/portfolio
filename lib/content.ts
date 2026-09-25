@@ -132,7 +132,7 @@ export const content: SiteContent = {
   highlights: [
     { value: "3rd", label: "prize at NexVerse Hackathon 2026, Aurora University" },
     { value: "200+", label: "teams in a 24-hour Blockchain + Cybersecurity hackathon" },
-    { value: "17", label: "public repositories on GitHub", href: "https://github.com/ekupekuAI" },
+    { value: "SIH", label: "Smart India Hackathon build: TrustVision", href: "https://github.com/ekupekuAI/AISecurity26228" },
   ],
   techStack: [
     "React",

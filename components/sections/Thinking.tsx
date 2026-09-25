@@ -65,6 +65,30 @@ export default function Thinking() {
           <p data-reveal className="mt-5 text-base leading-relaxed text-text-secondary opacity-0 md:text-lg">
             {content.bio}
           </p>
+          <ul className="mt-8 divide-y divide-text-secondary/15 border-y border-text-secondary/15">
+            {content.highlights.map((h) => (
+              <li key={h.label} data-reveal className="grid grid-cols-[auto_1fr] items-baseline gap-4 py-4 opacity-0">
+                <span className="font-[family-name:var(--font-display)] text-3xl font-bold tabular-nums text-text-primary md:text-4xl">
+                  {h.value}
+                </span>
+                <span className="text-sm text-text-secondary md:text-base">
+                  {h.href ? (
+                    <a
+                      href={h.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      data-cursor="github"
+                      className="underline decoration-text-secondary/40 underline-offset-4 transition-colors hover:text-accent hover:decoration-accent"
+                    >
+                      {h.label} ↗
+                    </a>
+                  ) : (
+                    h.label
+                  )}
+                </span>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
 

@@ -10,7 +10,7 @@ const SOCIALS = [
 export default function Footer() {
   const year = new Date().getFullYear();
   return (
-    <footer className="border-t border-text-secondary/15">
+    <footer className="relative z-10 border-t border-text-secondary/15 bg-bg-primary/60">
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-10 text-sm text-text-secondary md:flex-row md:items-center md:justify-between">
         <p>
           <span className="font-[family-name:var(--font-display)] font-bold text-text-primary">

@@ -48,18 +48,24 @@ function Tile({ item }: { item: LabItem }) {
       <p className="mt-6 font-[family-name:var(--font-display)] text-2xl font-bold text-text-primary">
         {item.title}
       </p>
-      <p className={`mt-2 text-sm leading-relaxed ${item.description ? "text-text-secondary" : "text-text-secondary/50 italic"}`}>
-        {item.description ?? "No description on GitHub yet."}
-      </p>
-      {item.meta && <p className="mt-6 text-xs text-text-secondary/70">{item.meta}</p>}
+      {item.description && (
+        <p className="mt-2 text-sm leading-relaxed text-text-secondary">{item.description}</p>
+      )}
+      {item.meta && <p className="mt-auto pt-6 text-xs text-text-secondary/70">{item.meta}</p>}
     </>
   );
 
   const className =
-    "group surface-glass flex h-full flex-col rounded-lg p-6 transition-[transform,border-color] duration-300 ease-out hover:border-accent/50";
+    "group surface-glass flex h-full flex-col rounded-lg p-6 transition-[border-color] duration-300 ease-out hover:border-accent/50";
 
   return (
-    <article ref={ref} data-reveal className="opacity-0" onPointerMove={onMove} onPointerLeave={onLeave}>
+    <article
+      ref={ref}
+      data-reveal
+      className="h-full opacity-0 transition-transform duration-300 ease-out"
+      onPointerMove={onMove}
+      onPointerLeave={onLeave}
+    >
       {item.href ? (
         <a href={item.href} target="_blank" rel="noreferrer" data-cursor="explore" className={className}>
           {body}

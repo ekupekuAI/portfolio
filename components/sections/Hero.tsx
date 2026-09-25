@@ -5,7 +5,6 @@ import { content } from "@/lib/content";
 import { useReducedMotion } from "@/lib/useReducedMotion";
 import { gsap, registerGsap } from "@/lib/animations/gsap";
 import { BOOT_COMPLETE_EVENT } from "@/components/layout/Boot";
-import ParticleField from "@/components/hero/ParticleField";
 import Magnetic from "@/components/ui/Magnetic";
 
 export default function Hero() {
@@ -21,12 +20,10 @@ export default function Hero() {
     const rest = root.querySelectorAll<HTMLElement>("[data-reveal]");
     const nameEl = root.querySelector<HTMLElement>("[data-name]");
     const textBlock = root.querySelector<HTMLElement>("[data-text]");
-    const field = root.querySelector<HTMLElement>("[data-field]");
 
     if (reducedMotion) {
       gsap.set(letterEls, { y: 0, yPercent: 0 });
       gsap.set(rest, { opacity: 1, y: 0 });
-      gsap.set(field, { opacity: 1 });
       return;
     }
 
@@ -35,7 +32,6 @@ export default function Hero() {
       // Inline translateY(110%) hides the letters before hydration; GSAP parses that
       // into a pixel `y`, so the from-state zeroes it and re-expresses it as yPercent.
       entrance
-        .fromTo(field, { opacity: 0 }, { opacity: 1, duration: 1.6, ease: "power2.out" }, 0)
         .fromTo(letterEls, { y: 0, yPercent: 110 }, { yPercent: 0, duration: 1, stagger: 0.045 }, 0.1)
         .fromTo(rest, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.7, stagger: 0.1 }, 0.45);
 
@@ -46,25 +42,30 @@ export default function Hero() {
         start();
       }
 
-      // Scroll-out: the name recedes and the text drifts up slower than the page,
-      // the network fades, so leaving the hero feels like moving past it.
-      gsap.to(nameEl, {
-        scale: 0.86,
-        opacity: 0.15,
-        ease: "none",
-        scrollTrigger: { trigger: root, start: "top top", end: "bottom top", scrub: true },
-      });
-      gsap.to(textBlock, {
-        yPercent: 18,
-        ease: "none",
-        scrollTrigger: { trigger: root, start: "top top", end: "bottom top", scrub: true },
-      });
-      gsap.to(field, {
-        opacity: 0.25,
-        yPercent: -8,
-        ease: "none",
-        scrollTrigger: { trigger: root, start: "top top", end: "bottom top", scrub: true },
-      });
+      // Scroll-out: the name recedes and the text drifts up slower than the page.
+      // Explicit from-values + immediateRender:false so reverse scroll restores the
+      // resting state rather than whatever the entrance had reached at creation.
+      gsap.fromTo(
+        nameEl,
+        { scale: 1, opacity: 1 },
+        {
+          scale: 0.86,
+          opacity: 0.15,
+          ease: "none",
+          immediateRender: false,
+          scrollTrigger: { trigger: root, start: "top top", end: "bottom top", scrub: true },
+        }
+      );
+      gsap.fromTo(
+        textBlock,
+        { yPercent: 0 },
+        {
+          yPercent: 18,
+          ease: "none",
+          immediateRender: false,
+          scrollTrigger: { trigger: root, start: "top top", end: "bottom top", scrub: true },
+        }
+      );
     }, root);
 
     return () => {
@@ -79,11 +80,7 @@ export default function Hero() {
       data-scene-bg="#0a0a0f"
       className="relative flex min-h-svh flex-col items-center justify-center overflow-hidden px-6 pt-24 pb-16 text-center md:pt-20 md:pb-12"
     >
-      {/* The interactive network: full-bleed, reacts to the pointer, paused off-screen. */}
-      <div data-field className="absolute inset-0 opacity-0">
-        <ParticleField particleCount={130} particleRadius={4} />
-      </div>
-      {/* Darkens the centre so the name reads over the field without a glow or halo. */}
+      {/* Darkens the centre so the name reads over the network without a glow or halo. */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_55%_50%_at_50%_50%,rgba(10,10,15,0.78),rgba(10,10,15,0)_100%)]"
