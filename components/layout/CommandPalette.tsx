@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { content } from "@/lib/content";
+import { hasRealResume } from "@/lib/hasRealResume";
 
 interface Command {
   id: string;
@@ -32,17 +33,21 @@ function buildCommands(): Command[] {
       group: "Navigate",
       action: navigate("contact"),
     },
-    {
-      id: "resume",
-      label: "Download resume",
-      group: "Actions",
-      action: () => {
-        const a = document.createElement("a");
-        a.href = content.resumeUrl;
-        a.download = "";
-        a.click();
-      },
-    },
+    ...(hasRealResume(content.resumeUrl)
+      ? [
+          {
+            id: "resume",
+            label: "Download resume",
+            group: "Actions",
+            action: () => {
+              const a = document.createElement("a");
+              a.href = content.resumeUrl;
+              a.download = "";
+              a.click();
+            },
+          },
+        ]
+      : []),
     {
       id: "social-github",
       label: "Open GitHub",
