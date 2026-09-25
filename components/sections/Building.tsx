@@ -45,7 +45,9 @@ export default function Building() {
     return decorated.slice(0, MAX_ROWS);
   }, [github]);
 
-  useReveal(sectionRef, [rows.length]);
+  // Key on the row ids, not the count: when GitHub data arrives the set of rows
+  // changes at the same length, and a new row must still get its reveal tween.
+  useReveal(sectionRef, [rows.map((r) => r.project.id).join(",")]);
 
   return (
     <section

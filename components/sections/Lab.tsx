@@ -123,7 +123,7 @@ export default function Lab() {
     return [...fromContent, ...fromGithub];
   }, [github]);
 
-  useReveal(sectionRef, [items.length]);
+  useReveal(sectionRef, [items.map((i) => i.id).join(",")]);
 
   return (
     <section

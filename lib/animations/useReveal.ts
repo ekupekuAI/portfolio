@@ -9,6 +9,10 @@ import { gsap, registerGsap } from "@/lib/animations/gsap";
  * (opacity + y only). Under reduced motion everything is simply shown. Uses
  * gsap.context() so React Strict Mode's double effect never leaves two tweens
  * fighting over the same element.
+ *
+ * Pass `deps` that change whenever the set of reveal targets changes (e.g. a
+ * key of row ids once async data arrives): the hook re-runs, tweens the new
+ * elements, and keeps already-revealed ones visible instead of replaying them.
  */
 export function useReveal(root: RefObject<HTMLElement | null>, deps: unknown[] = []): void {
   const reducedMotion = useReducedMotion();
@@ -27,6 +31,12 @@ export function useReveal(root: RefObject<HTMLElement | null>, deps: unknown[] =
 
     const ctx = gsap.context(() => {
       items.forEach((item) => {
+        if (item.dataset.revealed) {
+          // Already shown in a previous run; ctx.revert() from that run put it
+          // back to its opacity-0 class, so pin it visible without a replay.
+          gsap.set(item, { opacity: 1, y: 0 });
+          return;
+        }
         gsap.fromTo(
           item,
           { opacity: 0, y: 28 },
@@ -36,6 +46,9 @@ export function useReveal(root: RefObject<HTMLElement | null>, deps: unknown[] =
             duration: 0.8,
             ease: "power3.out",
             scrollTrigger: { trigger: item, start: "top 88%" },
+            onComplete: () => {
+              item.dataset.revealed = "1";
+            },
           }
         );
       });
