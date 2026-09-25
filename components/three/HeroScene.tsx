@@ -30,20 +30,17 @@ function HeroModel({ reducedMotion }: { reducedMotion: boolean }) {
 
   return (
     <group ref={meshRef}>
-      {/* meshBasicMaterial (unlit), solid opaque fill: this exact configuration is
-          confirmed by direct WebGL framebuffer readback (not just a screenshot) to
-          render correctly. An earlier version used a faint wireframe + 15% opacity
-          fill — never independently re-verified after being written, and too subtle
-          to actually see. Kept deliberately bold/opaque now. If you swap in a real
-          Spline export with a lit/PBR material, verify it renders as expected in your
-          actual target browsers first. */}
+      {/* meshBasicMaterial (unlit), solid opaque fill, single mesh: this exact
+          configuration is confirmed by direct WebGL framebuffer readback to render
+          correctly. A second, wireframe-overlay mesh sharing the identical geometry
+          was removed — two coincident surfaces at the same depth can z-fight, and
+          that risk isn't worth it while this is still unconfirmed in a real user's
+          browser. Re-add styling only after confirming this bare version is visible.
+          If you swap in a real Spline export with a lit/PBR material, verify it
+          renders as expected in your actual target browsers first. */}
       <mesh>
         <icosahedronGeometry args={[1.6, 1]} />
         <meshBasicMaterial color="#00E5FF" />
-      </mesh>
-      <mesh>
-        <icosahedronGeometry args={[1.6, 1]} />
-        <meshBasicMaterial color="#0A0A0F" wireframe />
       </mesh>
     </group>
   );
