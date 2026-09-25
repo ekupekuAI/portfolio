@@ -67,16 +67,24 @@ export default function GitHubActivity() {
   const { calendar } = state;
 
   return (
-    <div className="mt-10">
+    <div className="mt-16 border-t border-text-secondary/15 pt-8">
       <p className="text-sm text-text-secondary">
-        {calendar.totalContributions} contributions in the last year
+        <span className="font-[family-name:var(--font-display)] text-2xl font-bold tabular-nums text-text-primary">
+          {calendar.totalContributions}
+        </span>{" "}
+        contributions on GitHub in the last year
       </p>
-      <div className="mt-3 flex gap-[3px] overflow-x-auto pb-2">
+      <div
+        role="img"
+        aria-label={`${calendar.totalContributions} GitHub contributions in the last year`}
+        className="mt-4 flex gap-[3px] overflow-x-auto pb-2"
+      >
         {calendar.weeks.map((week, wi) => (
           <div key={wi} className="flex flex-col gap-[3px]">
             {week.contributionDays.map((day) => (
               <div
                 key={day.date}
+                aria-hidden
                 title={`${day.contributionCount} contributions on ${day.date}`}
                 className="h-[10px] w-[10px] rounded-sm bg-accent"
                 style={{ opacity: LEVEL_OPACITY[levelForCount(day.contributionCount)] }}
