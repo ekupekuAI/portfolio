@@ -9,9 +9,17 @@ import { gsap, registerGsap } from "@/lib/animations/gsap";
 
 function ProjectCard({ project }: { project: (typeof content.projects)[number] }) {
   return (
-    <div className="w-[80vw] flex-shrink-0 rounded-lg border border-accent/20 bg-bg-secondary p-6 md:w-[480px]">
+    <div
+      className="group w-[80vw] flex-shrink-0 rounded-lg border border-accent/20 bg-bg-secondary p-6 transition-all duration-300 hover:-translate-y-2 hover:border-accent hover:shadow-[0_0_30px_rgba(0,229,255,0.25)] md:w-[480px]"
+      data-cursor-hover
+    >
       <div className="relative aspect-[3/2] w-full overflow-hidden rounded-md">
-        <Image src={project.image} alt={project.title} fill className="object-cover" />
+        <Image
+          src={project.image}
+          alt={project.title}
+          fill
+          className="object-cover transition-transform duration-500 group-hover:scale-110"
+        />
       </div>
       <h3 className="mt-4 font-[family-name:var(--font-display)] text-2xl font-bold text-text-primary">
         {project.title}
