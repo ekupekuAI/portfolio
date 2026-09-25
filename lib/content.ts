@@ -6,6 +6,20 @@ export interface Project {
   image: string;
   liveUrl?: string;
   repoUrl?: string;
+  /** Featured projects get the large editorial row; the rest render as a compact list. */
+  featured?: boolean;
+  /** One short, verifiable result line shown next to the title (prize, live demo, scale). */
+  outcome?: string;
+  /** Only listed where the description already states the stack; never guessed. */
+  stack?: string[];
+}
+
+export interface Highlight {
+  /** The number or short token shown large ("3rd", "200+", "17"). */
+  value: string;
+  /** What the value proves, written as a sentence fragment a recruiter can verify. */
+  label: string;
+  href?: string;
 }
 
 export interface SocialLinks {
@@ -23,8 +37,13 @@ export interface Stats {
 export interface SiteContent {
   name: string;
   role: string;
+  /** One specific sentence for the hero: what gets built, not a job title. */
+  claim: string;
+  /** Plain-text availability line for the hero, no chip. */
+  availability: string;
   bioLead: string;
   bio: string;
+  highlights: Highlight[];
   techStack: string[];
   projects: Project[];
   social: SocialLinks;
@@ -42,6 +61,14 @@ export interface SiteContent {
 export const content: SiteContent = {
   name: "Ekansh",
   role: "Full-Stack Developer & AI Engineer",
+  claim:
+    "I design and ship complete systems: defense-grade ML integrity tooling, citizen-first legal AI, and the backends that hold them together.",
+  availability: "Open to 2026 internships",
+  highlights: [
+    { value: "3rd", label: "prize at NexVerse Hackathon 2026, Aurora University" },
+    { value: "200+", label: "teams in a 24-hour Blockchain + Cybersecurity hackathon" },
+    { value: "17", label: "public repositories on GitHub", href: "https://github.com/ekupekuAI" },
+  ],
   bioLead:
     "I'm a Computer Science Engineering student who builds software end-to-end — from idea and architecture to a working, deployed product.",
   bio: "Strongest across the full loop: understanding a problem, designing the system, integrating frontend, backend, database, and AI models, debugging, shipping, and presenting it. Most effective in ambiguous problem spaces where the solution isn't handed to him. 3rd Prize, NexVerse Hackathon 2026 (Aurora University); competed in a 200+ team, 24-hour Blockchain + Cybersecurity hackathon. Currently sharpening DSA, system design, and production backend engineering — open to Software, Full-Stack, Backend, and AI Engineering internships.",
@@ -68,6 +95,8 @@ export const content: SiteContent = {
         "An offline, air-gapped integrity-assurance system for defense computer-vision pipelines — verifies datasets, models, and inference outputs (duplicate/backdoor/out-of-distribution detection) and issues a signed, evidence-backed trust verdict with a tamper-proof audit log. Built for Smart India Hackathon (SIH).",
       image: "/projects/trustvision.svg",
       repoUrl: "https://github.com/ekupekuAI/AISecurity26228",
+      featured: true,
+      outcome: "Smart India Hackathon build",
     },
     {
       id: "nyayapath",
@@ -78,6 +107,8 @@ export const content: SiteContent = {
       image: "/projects/nyayapath.svg",
       repoUrl: "https://github.com/ekupekuAI/NyayaPath",
       liveUrl: "https://nyaya-path-coral.vercel.app",
+      featured: true,
+      outcome: "Live demo",
     },
     {
       id: "hireflow",
@@ -87,6 +118,7 @@ export const content: SiteContent = {
         "A glass-box, bias-aware AI recruiting agent: upload a job description and resumes to get an evidence-cited ranked shortlist, auto-generated interview kits, natural-language Q&A over the candidate pool, and a Blind Mode that surfaces hiring bias. Built for the AI Agent Hackathon 2026.",
       image: "/projects/hireflow.svg",
       repoUrl: "https://github.com/ekupekuAI/Hireflow",
+      outcome: "AI Agent Hackathon 2026",
     },
     {
       id: "sentinel-id",
@@ -105,6 +137,7 @@ export const content: SiteContent = {
         "A full-stack personal study command center (React + FastAPI + PostgreSQL) with subjects, tasks, notes, study-session tracking, and a per-user AI study assistant — JWT auth, per-user data isolation, and production-hardened rate limiting.",
       image: "/projects/student-command-center.svg",
       repoUrl: "https://github.com/ekupekuAI/student-command-center",
+      stack: ["React", "FastAPI", "PostgreSQL"],
     },
     {
       id: "health-record-system",
@@ -114,6 +147,7 @@ export const content: SiteContent = {
         "A full-stack health record management prototype (React + Flask + MongoDB) with role-based access for patients, doctors, and admins — appointment booking, medical records timeline, and prescription management.",
       image: "/projects/health-record-system.svg",
       repoUrl: "https://github.com/ekupekuAI/Health-Record-System",
+      stack: ["React", "Flask", "MongoDB"],
     },
     {
       id: "ai-dropout-prediction",

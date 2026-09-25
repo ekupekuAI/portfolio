@@ -36,6 +36,22 @@ describe("content", () => {
     expect(content.social.twitter).toBeTruthy();
   });
 
+  it("has a hero claim, availability line, and verifiable highlights", () => {
+    expect(content.claim.length).toBeGreaterThan(20);
+    expect(content.availability.length).toBeGreaterThan(0);
+    expect(content.highlights.length).toBeGreaterThan(0);
+    for (const h of content.highlights) {
+      expect(h.value).toBeTruthy();
+      expect(h.label).toBeTruthy();
+    }
+  });
+
+  it("features at least one project and leaves some for the list", () => {
+    const featured = content.projects.filter((p) => p.featured);
+    expect(featured.length).toBeGreaterThan(0);
+    expect(featured.length).toBeLessThan(content.projects.length);
+  });
+
   it("has real, positive stats", () => {
     expect(content.stats.githubRepoCount).toBeGreaterThan(0);
     expect(content.stats.hackathonsCompeted).toBeGreaterThan(0);

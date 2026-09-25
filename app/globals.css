@@ -55,19 +55,16 @@ h3 {
   text-wrap: balance;
 }
 
+/* Reveal targets start hidden and are animated in by GSAP. If scripting is off,
+   nothing must stay hidden behind an animation that will never run. */
+@media (scripting: none) {
+  [data-reveal],
+  [data-letter] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
 p {
   text-wrap: pretty;
-}
-
-@keyframes marquee-scroll {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-
-.animate-marquee-scroll {
-  animation: marquee-scroll 25s linear infinite;
 }
