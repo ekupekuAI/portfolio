@@ -10,9 +10,10 @@ interface Particle {
   vy: number;
 }
 
-const PARTICLE_COUNT = 70;
-const CONNECT_DISTANCE = 130;
-const MOUSE_CONNECT_DISTANCE = 200;
+const PARTICLE_COUNT = 130;
+const PARTICLE_RADIUS = 4.5;
+const CONNECT_DISTANCE = 170;
+const MOUSE_CONNECT_DISTANCE = 260;
 const ACCENT_RGB = "0, 229, 255"; // #00E5FF, as rgb() components for rgba() strings
 
 /**
@@ -80,9 +81,9 @@ export default function ParticleField() {
           const b = particles[j];
           const dist = Math.hypot(a.x - b.x, a.y - b.y);
           if (dist < CONNECT_DISTANCE) {
-            const opacity = (1 - dist / CONNECT_DISTANCE) * 0.4;
+            const opacity = (1 - dist / CONNECT_DISTANCE) * 0.7;
             ctx!.strokeStyle = `rgba(${ACCENT_RGB}, ${opacity})`;
-            ctx!.lineWidth = 1;
+            ctx!.lineWidth = 1.5;
             ctx!.beginPath();
             ctx!.moveTo(a.x, a.y);
             ctx!.lineTo(b.x, b.y);
@@ -92,9 +93,9 @@ export default function ParticleField() {
 
         const distToMouse = Math.hypot(particles[i].x - mouse.x, particles[i].y - mouse.y);
         if (distToMouse < MOUSE_CONNECT_DISTANCE) {
-          const opacity = (1 - distToMouse / MOUSE_CONNECT_DISTANCE) * 0.8;
+          const opacity = 1 - distToMouse / MOUSE_CONNECT_DISTANCE;
           ctx!.strokeStyle = `rgba(${ACCENT_RGB}, ${opacity})`;
-          ctx!.lineWidth = 1.2;
+          ctx!.lineWidth = 2;
           ctx!.beginPath();
           ctx!.moveTo(particles[i].x, particles[i].y);
           ctx!.lineTo(mouse.x, mouse.y);
@@ -103,10 +104,13 @@ export default function ParticleField() {
       }
 
       for (const p of particles) {
-        ctx!.fillStyle = `rgba(${ACCENT_RGB}, 0.9)`;
+        ctx!.shadowColor = `rgb(${ACCENT_RGB})`;
+        ctx!.shadowBlur = 8;
+        ctx!.fillStyle = `rgba(${ACCENT_RGB}, 1)`;
         ctx!.beginPath();
-        ctx!.arc(p.x, p.y, 2, 0, Math.PI * 2);
+        ctx!.arc(p.x, p.y, PARTICLE_RADIUS, 0, Math.PI * 2);
         ctx!.fill();
+        ctx!.shadowBlur = 0;
       }
 
       if (!reducedMotion) {

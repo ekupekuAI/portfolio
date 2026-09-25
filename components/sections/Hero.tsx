@@ -41,16 +41,16 @@ export default function Hero() {
       id="hero"
       className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 text-center"
     >
-      <div className="absolute inset-0 -z-10">
+      <div className="absolute inset-0">
         <ParticleField />
       </div>
       <h1
         ref={nameRef}
-        className="font-[family-name:var(--font-display)] text-6xl font-bold tracking-tight text-text-primary opacity-0 md:text-8xl"
+        className="relative z-10 font-[family-name:var(--font-display)] text-6xl font-bold tracking-tight text-text-primary opacity-0 md:text-8xl"
       >
         {content.name}
       </h1>
-      <p ref={roleRef} className="mt-4 text-xl text-accent opacity-0 md:text-2xl">
+      <p ref={roleRef} className="relative z-10 mt-4 text-xl text-accent opacity-0 md:text-2xl">
         {content.role}
       </p>
     </section>
