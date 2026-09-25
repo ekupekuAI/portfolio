@@ -68,6 +68,15 @@ export const content: SiteContent = {
       liveUrl: "https://nyaya-path-coral.vercel.app",
     },
     {
+      id: "hireflow",
+      title: "HireFlow",
+      category: "AI Agent Hackathon",
+      description:
+        "A glass-box, bias-aware AI recruiting agent: upload a job description and resumes to get an evidence-cited ranked shortlist, auto-generated interview kits, natural-language Q&A over the candidate pool, and a Blind Mode that surfaces hiring bias. Built for the AI Agent Hackathon 2026.",
+      image: "/projects/placeholder.svg",
+      repoUrl: "https://github.com/ekupekuAI/Hireflow",
+    },
+    {
       id: "sentinel-id",
       title: "SentinelID",
       category: "Supply Chain Security",
@@ -84,6 +93,15 @@ export const content: SiteContent = {
         "A full-stack personal study command center (React + FastAPI + PostgreSQL) with subjects, tasks, notes, study-session tracking, and a per-user AI study assistant — JWT auth, per-user data isolation, and production-hardened rate limiting.",
       image: "/projects/placeholder.svg",
       repoUrl: "https://github.com/ekupekuAI/student-command-center",
+    },
+    {
+      id: "health-record-system",
+      title: "Health Record System",
+      category: "Healthcare",
+      description:
+        "A full-stack health record management prototype (React + Flask + MongoDB) with role-based access for patients, doctors, and admins — appointment booking, medical records timeline, and prescription management.",
+      image: "/projects/placeholder.svg",
+      repoUrl: "https://github.com/ekupekuAI/Health-Record-System",
     },
     {
       id: "ai-dropout-prediction",

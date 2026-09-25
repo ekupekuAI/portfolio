@@ -10,11 +10,17 @@ interface Particle {
   vy: number;
 }
 
-const PARTICLE_COUNT = 130;
-const PARTICLE_RADIUS = 4.5;
 const CONNECT_DISTANCE = 170;
 const MOUSE_CONNECT_DISTANCE = 260;
 const ACCENT_RGB = "0, 229, 255"; // #00E5FF, as rgb() components for rgba() strings
+
+interface ParticleFieldProps {
+  /** Number of particles. Lower for a sparser, more ambient feel. */
+  particleCount?: number;
+  /** Radius of each particle dot, in CSS px. */
+  particleRadius?: number;
+  className?: string;
+}
 
 /**
  * A mouse-reactive particle network, drawn with the plain 2D Canvas API — not WebGL.
@@ -28,7 +34,11 @@ const ACCENT_RGB = "0, 229, 255"; // #00E5FF, as rgb() components for rgba() str
  * of bug. Sized and animated entirely by hand (no dynamic import, no external sizing
  * library), so there's nothing else in the pipeline to go wrong.
  */
-export default function ParticleField() {
+export default function ParticleField({
+  particleCount = 130,
+  particleRadius = 4.5,
+  className = "",
+}: ParticleFieldProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const reducedMotion = useReducedMotion();
 
@@ -55,7 +65,7 @@ export default function ParticleField() {
     }
 
     function initParticles() {
-      particles = Array.from({ length: PARTICLE_COUNT }, () => ({
+      particles = Array.from({ length: particleCount }, () => ({
         x: Math.random() * width,
         y: Math.random() * height,
         vx: (Math.random() - 0.5) * 0.3,
@@ -108,7 +118,7 @@ export default function ParticleField() {
         ctx!.shadowBlur = 8;
         ctx!.fillStyle = `rgba(${ACCENT_RGB}, 1)`;
         ctx!.beginPath();
-        ctx!.arc(p.x, p.y, PARTICLE_RADIUS, 0, Math.PI * 2);
+        ctx!.arc(p.x, p.y, particleRadius, 0, Math.PI * 2);
         ctx!.fill();
         ctx!.shadowBlur = 0;
       }
@@ -143,7 +153,7 @@ export default function ParticleField() {
       window.removeEventListener("pointermove", handlePointerMove);
       window.removeEventListener("pointerleave", handlePointerLeave);
     };
-  }, [reducedMotion]);
+  }, [reducedMotion, particleCount, particleRadius]);
 
-  return <canvas ref={canvasRef} className="h-full w-full" aria-hidden />;
+  return <canvas ref={canvasRef} className={`h-full w-full ${className}`} aria-hidden />;
 }

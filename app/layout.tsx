@@ -3,6 +3,7 @@ import { Space_Grotesk, Inter } from "next/font/google";
 import { content } from "@/lib/content";
 import CustomCursor from "@/components/layout/CustomCursor";
 import ScrollProgress from "@/components/layout/ScrollProgress";
+import AmbientBackground from "@/components/layout/AmbientBackground";
 import "./globals.css";
 
 const display = Space_Grotesk({
@@ -34,6 +35,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body
         className={`${display.variable} ${body.variable} font-[family-name:var(--font-body)] bg-bg-primary text-text-primary antialiased`}
       >
+        <AmbientBackground />
         <ScrollProgress />
         <CustomCursor />
         {children}
