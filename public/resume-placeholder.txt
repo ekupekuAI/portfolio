@@ -1,0 +1,2 @@
+Replace this file with your real resume PDF, then update `resumeUrl` in lib/content.ts
+to point to the new file (e.g. "/cv.pdf").
