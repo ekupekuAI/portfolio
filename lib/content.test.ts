@@ -21,9 +21,10 @@ describe("content", () => {
     expect(p.description).toBeTruthy();
   });
 
-  it("has all three social links present (even as placeholders)", () => {
+  it("has all four social links present (even as placeholders)", () => {
     expect(content.social.github).toBeTruthy();
     expect(content.social.linkedin).toBeTruthy();
     expect(content.social.instagram).toBeTruthy();
+    expect(content.social.twitter).toBeTruthy();
   });
 });

@@ -11,6 +11,7 @@ export interface SocialLinks {
   github: string;
   linkedin: string;
   instagram: string;
+  twitter: string;
 }
 
 export interface SiteContent {
@@ -23,8 +24,10 @@ export interface SiteContent {
   resumeUrl: string;
 }
 
-// NOTE: placeholder content. Replace with real data (LinkedIn bio, GitHub/Instagram
-// links, real projects, real resume) — this file is the single place that needs editing.
+// NOTE: real social links are set below. Bio, tech stack, and projects are still
+// placeholders — LinkedIn requires login to view profile content for automated access,
+// so the bio wasn't pulled from it. Replace bio/techStack/projects/resumeUrl and the
+// github link below when ready — this file is the single place that needs editing.
 export const content: SiteContent = {
   name: "Your Name",
   role: "AI/ML Developer",
@@ -40,9 +43,10 @@ export const content: SiteContent = {
     },
   ],
   social: {
-    github: "https://github.com/",
-    linkedin: "https://linkedin.com/",
-    instagram: "https://instagram.com/",
+    github: "https://github.com/", // TODO: replace with your real GitHub profile URL
+    linkedin: "https://www.linkedin.com/in/gingamekansh/",
+    instagram: "https://instagram.com/whyalways.ekansh",
+    twitter: "https://twitter.com/Ekanshxd",
   },
   resumeUrl: "/resume-placeholder.txt",
 };

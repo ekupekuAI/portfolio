@@ -133,6 +133,9 @@ export default function Contact() {
         <a href={content.social.instagram} target="_blank" rel="noreferrer" data-cursor-hover>
           Instagram
         </a>
+        <a href={content.social.twitter} target="_blank" rel="noreferrer" data-cursor-hover>
+          Twitter
+        </a>
       </div>
     </section>
   );
