@@ -69,7 +69,7 @@ h3 {
   [data-letter],
   [data-column],
   [data-step],
-  [data-visual] {
+  [data-field] {
     opacity: 1 !important;
     transform: none !important;
   }
