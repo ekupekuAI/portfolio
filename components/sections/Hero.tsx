@@ -13,13 +13,17 @@ export default function Hero() {
 
   useEffect(() => {
     registerGsap();
-    const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
     if (reducedMotion) {
-      tl.set([nameRef.current, roleRef.current], { opacity: 1, y: 0 });
+      // gsap.set() applies synchronously, unlike tl.set() on a fresh timeline (which
+      // only takes effect on GSAP's next ticker tick) — this path must never leave
+      // content sitting at its opacity-0 default even briefly, since it exists
+      // specifically for users who asked for no motion.
+      gsap.set([nameRef.current, roleRef.current], { opacity: 1, y: 0 });
       return;
     }
 
+    const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
     tl.fromTo(
       nameRef.current,
       { opacity: 0, y: 40 },

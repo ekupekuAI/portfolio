@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Portfolio
 
-## Getting Started
+Personal portfolio site — Next.js, React Three Fiber, GSAP ScrollTrigger, Framer Motion
+(`motion`), Tailwind CSS, Resend.
 
-First, run the development server:
+## Development
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Environment variables
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Copy `.env.example` to `.env.local` and fill in:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `RESEND_API_KEY` — from https://resend.com
+- `CONTACT_TO_EMAIL` — where contact-form messages get delivered
 
-## Learn More
+Without these set, the contact form correctly shows an inline error with a LinkedIn
+fallback link (verified) rather than failing silently.
 
-To learn more about Next.js, take a look at the following resources:
+## Replacing placeholder content
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Edit `lib/content.ts` — name, role, bio, tech stack, projects, social links, resume path
+all live there. Drop your real resume PDF in `public/`, then update `resumeUrl`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Replacing the placeholder 3D model
 
-## Deploy on Vercel
+`components/three/HeroScene.tsx` currently renders a placeholder wireframe icosahedron
+using `meshBasicMaterial` — confirmed via direct WebGL framebuffer readback to render
+correctly. If you export your Spline scene as React Three Fiber code and it uses a lit
+material (`meshStandardMaterial`, `meshPhongMaterial`, etc.), verify it actually renders
+in your target browsers before relying on it — lit materials could not be confirmed
+rendering in this project's dev/test environment (no errors were thrown; it's an
+unresolved environment-specific gap, not a known code issue). Keep the existing
+mouse-tracking and reduced-motion wiring in `HeroModel` regardless of which material you
+use.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Testing
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm test
+```
+
+## Deployment
+
+Not yet connected to GitHub/Vercel (local-only by design for now). To deploy: push to a
+GitHub repo, import it in Vercel, and set the environment variables above in the Vercel
+project settings.
