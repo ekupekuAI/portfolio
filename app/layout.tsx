@@ -25,8 +25,10 @@ const description = `${content.bioLead} ${content.bio}`;
 export const metadata: Metadata = {
   // Needed for the og:image URL to resolve to an absolute path once deployed. Set
   // NEXT_PUBLIC_SITE_URL to the real domain when you deploy — falls back to localhost
-  // for local dev.
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
+  // for local dev. `||` (not `??`) deliberately: an env var present but set to an
+  // empty string (e.g. a blank line in .env.local) must also fall back, not pass ""
+  // straight to `new URL()`, which throws.
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
   title: `${content.name} — ${content.role}`,
   description,
   openGraph: {
