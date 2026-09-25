@@ -23,7 +23,11 @@ fallback link (verified) rather than failing silently.
 ## Replacing placeholder content
 
 Edit `lib/content.ts` — name, role, bio, tech stack, projects, social links, resume path
-all live there. Drop your real resume PDF in `public/`, then update `resumeUrl`.
+all live there. Drop your real resume PDF in `public/`, then update `resumeUrl` — the
+Resume button (nav and command palette) stays hidden while the URL still contains
+"placeholder", so a text stand-in never ships as a primary call to action.
+`claim` and `highlights` feed the hero sentence and the About proof list; mark a
+project `featured: true` to give it a full-width row instead of a list entry.
 
 ## Hero visual: Canvas 2D particle network
 
