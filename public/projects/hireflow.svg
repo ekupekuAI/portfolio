@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400">
+  <defs>
+    <pattern id="dots-hf" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="1.5" cy="1.5" r="1.5" fill="#1c1c24"/>
+    </pattern>
+  </defs>
+  <rect width="600" height="400" fill="#121218"/>
+  <rect width="600" height="400" fill="url(#dots-hf)"/>
+  <g transform="translate(300,180)" stroke="#00E5FF" stroke-width="2" fill="none">
+    <line x1="-110" y1="0" x2="-20" y2="-45"/>
+    <line x1="-110" y1="0" x2="-20" y2="0"/>
+    <line x1="-110" y1="0" x2="-20" y2="45"/>
+    <line x1="20" y1="-45" x2="110" y2="0"/>
+    <line x1="20" y1="0" x2="110" y2="0"/>
+    <line x1="20" y1="45" x2="110" y2="0"/>
+    <circle cx="-110" cy="0" r="10" fill="#121218"/>
+    <circle cx="-20" cy="-45" r="8" fill="#121218"/>
+    <circle cx="-20" cy="0" r="8" fill="#121218"/>
+    <circle cx="-20" cy="45" r="8" fill="#121218"/>
+    <circle cx="110" cy="0" r="12" fill="#00E5FF" stroke="none"/>
+  </g>
+  <text x="300" y="352" fill="#F5F5F7" font-family="sans-serif" font-size="20" font-weight="700" text-anchor="middle">HireFlow</text>
+  <text x="300" y="374" fill="#00E5FF" font-family="sans-serif" font-size="12" letter-spacing="2" text-anchor="middle">AI AGENT HACKATHON</text>
+</svg>

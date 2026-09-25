@@ -36,7 +36,9 @@ export interface SiteContent {
 // (self-reported + cross-checked against actual repo READMEs), real social links, and
 // real projects are set below. "AI Dropout Prediction" has no findable public repo among
 // the 17 on his GitHub — description is his own, but there's no repoUrl to link. Project
-// images are still the placeholder SVG until real screenshots are provided.
+// images are custom per-project SVG graphics (public/projects/*.svg) designed to look
+// intentional rather than like missing screenshots — swap any of them for a real
+// screenshot whenever one is available; the card layout handles either.
 export const content: SiteContent = {
   name: "Ekansh",
   role: "Full-Stack Developer & AI Engineer",
@@ -64,7 +66,7 @@ export const content: SiteContent = {
       category: "SIH Hackathon",
       description:
         "An offline, air-gapped integrity-assurance system for defense computer-vision pipelines — verifies datasets, models, and inference outputs (duplicate/backdoor/out-of-distribution detection) and issues a signed, evidence-backed trust verdict with a tamper-proof audit log. Built for Smart India Hackathon (SIH).",
-      image: "/projects/placeholder.svg",
+      image: "/projects/trustvision.svg",
       repoUrl: "https://github.com/ekupekuAI/AISecurity26228",
     },
     {
@@ -73,7 +75,7 @@ export const content: SiteContent = {
       category: "Legal AI",
       description:
         "An independent, citizen-first case-understanding tool that turns synthetic court case updates into a timeline, a plain-language explanation, and the next known step. Uses synthetic demo data; not an official government service and doesn't provide legal advice.",
-      image: "/projects/placeholder.svg",
+      image: "/projects/nyayapath.svg",
       repoUrl: "https://github.com/ekupekuAI/NyayaPath",
       liveUrl: "https://nyaya-path-coral.vercel.app",
     },
@@ -83,7 +85,7 @@ export const content: SiteContent = {
       category: "AI Agent Hackathon",
       description:
         "A glass-box, bias-aware AI recruiting agent: upload a job description and resumes to get an evidence-cited ranked shortlist, auto-generated interview kits, natural-language Q&A over the candidate pool, and a Blind Mode that surfaces hiring bias. Built for the AI Agent Hackathon 2026.",
-      image: "/projects/placeholder.svg",
+      image: "/projects/hireflow.svg",
       repoUrl: "https://github.com/ekupekuAI/Hireflow",
     },
     {
@@ -92,7 +94,7 @@ export const content: SiteContent = {
       category: "Supply Chain Security",
       description:
         "A trust & verification system for AI/software supply chains — integrity checking, tamper-evidence, and traceability for the components a project depends on.",
-      image: "/projects/placeholder.svg",
+      image: "/projects/sentinel-id.svg",
       repoUrl: "https://github.com/ekupekuAI/Sentinel-ID",
     },
     {
@@ -101,7 +103,7 @@ export const content: SiteContent = {
       category: "Full-Stack",
       description:
         "A full-stack personal study command center (React + FastAPI + PostgreSQL) with subjects, tasks, notes, study-session tracking, and a per-user AI study assistant — JWT auth, per-user data isolation, and production-hardened rate limiting.",
-      image: "/projects/placeholder.svg",
+      image: "/projects/student-command-center.svg",
       repoUrl: "https://github.com/ekupekuAI/student-command-center",
     },
     {
@@ -110,7 +112,7 @@ export const content: SiteContent = {
       category: "Healthcare",
       description:
         "A full-stack health record management prototype (React + Flask + MongoDB) with role-based access for patients, doctors, and admins — appointment booking, medical records timeline, and prescription management.",
-      image: "/projects/placeholder.svg",
+      image: "/projects/health-record-system.svg",
       repoUrl: "https://github.com/ekupekuAI/Health-Record-System",
     },
     {
@@ -119,7 +121,7 @@ export const content: SiteContent = {
       category: "Applied ML",
       description:
         "Predicts at-risk students and recommends interventions, rather than just flagging risk.",
-      image: "/projects/placeholder.svg",
+      image: "/projects/ai-dropout-prediction.svg",
       // No public repo found for this one — add repoUrl/liveUrl here once you have a link.
     },
   ],

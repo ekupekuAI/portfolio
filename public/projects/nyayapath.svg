@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400">
+  <defs>
+    <pattern id="dots-np" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="1.5" cy="1.5" r="1.5" fill="#1c1c24"/>
+    </pattern>
+  </defs>
+  <rect width="600" height="400" fill="#121218"/>
+  <rect width="600" height="400" fill="url(#dots-np)"/>
+  <g transform="translate(300,190)" fill="none" stroke="#FF8A3D" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">
+    <line x1="0" y1="-70" x2="0" y2="70"/>
+    <line x1="-90" y1="-40" x2="90" y2="-40"/>
+    <path d="M-90,-40 L-118,10 A28,20 0 0 0 -62,10 Z"/>
+    <path d="M90,-40 L62,10 A28,20 0 0 0 118,10 Z"/>
+    <line x1="-40" y1="70" x2="40" y2="70"/>
+    <circle cx="0" cy="-40" r="8" fill="#FF8A3D" stroke="none"/>
+  </g>
+  <text x="300" y="352" fill="#F5F5F7" font-family="sans-serif" font-size="20" font-weight="700" text-anchor="middle">NyayaPath</text>
+  <text x="300" y="374" fill="#FF8A3D" font-family="sans-serif" font-size="12" letter-spacing="2" text-anchor="middle">LEGAL AI</text>
+</svg>
