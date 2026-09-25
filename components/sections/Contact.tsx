@@ -4,13 +4,18 @@ import { useEffect, useRef, useState } from "react";
 import { content } from "@/lib/content";
 import { useReducedMotion } from "@/lib/useReducedMotion";
 import { gsap, registerGsap } from "@/lib/animations/gsap";
-import ScrambleText from "@/components/ui/ScrambleText";
 import Magnetic from "@/components/ui/Magnetic";
 
 type Status = "idle" | "sending" | "success" | "error";
 
+const FIELD_CLASS =
+  "w-full rounded-md border border-text-secondary/25 bg-bg-secondary px-4 py-3 text-text-primary outline-none transition-colors placeholder:text-text-secondary/60 focus:border-accent";
+const LABEL_CLASS = "text-sm text-text-secondary";
+
 export default function Contact() {
   const sectionRef = useRef<HTMLElement>(null);
+  const headingRef = useRef<HTMLDivElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const reducedMotion = useReducedMotion();
@@ -20,13 +25,15 @@ export default function Contact() {
     registerGsap();
     const ctx = gsap.context(() => {
       gsap.fromTo(
-        sectionRef.current,
-        { y: 60, opacity: 0 },
+        [headingRef.current, formRef.current],
+        { y: 40, opacity: 0 },
         {
           y: 0,
           opacity: 1,
           duration: 0.8,
-          scrollTrigger: { trigger: sectionRef.current, start: "top 85%" },
+          stagger: 0.15,
+          ease: "power3.out",
+          scrollTrigger: { trigger: sectionRef.current, start: "top 75%" },
         }
       );
     }, sectionRef);
@@ -78,15 +85,45 @@ export default function Contact() {
   }
 
   return (
-    <section ref={sectionRef} id="contact" className="mx-auto max-w-2xl px-6 py-32">
-      <p className="text-sm uppercase tracking-[0.3em] text-accent2">
-        <ScrambleText text="03 — Contact" />
-      </p>
-      <h2 className="mt-2 font-[family-name:var(--font-display)] text-4xl font-bold text-text-primary md:text-5xl">
-        <ScrambleText text="Let's Get In Touch" />
-      </h2>
+    <section
+      ref={sectionRef}
+      id="contact"
+      className="mx-auto grid max-w-6xl gap-12 px-6 py-[var(--spacing-section)] md:grid-cols-[1fr_1.1fr] md:gap-20"
+    >
+      <div ref={headingRef}>
+        <p className="text-xs uppercase tracking-[var(--tracking-label)] text-accent2">Contact</p>
+        <h2 className="mt-3 font-[family-name:var(--font-display)] text-4xl font-bold leading-[1.05] text-text-primary md:text-6xl">
+          Have a role, a hackathon team, or a hard problem?
+        </h2>
+        <p className="mt-6 max-w-md text-lg text-text-secondary">
+          Open to Software, Full-Stack, Backend, and AI Engineering internships. Messages land
+          in my inbox directly; I reply to every real one.
+        </p>
+        <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-2">
+          {(
+            [
+              ["GitHub", content.social.github],
+              ["LinkedIn", content.social.linkedin],
+              ["Twitter", content.social.twitter],
+              ["Instagram", content.social.instagram],
+            ] as const
+          ).map(([label, href]) => (
+            <li key={label}>
+              <a
+                href={href}
+                target="_blank"
+                rel="noreferrer"
+                data-cursor-hover
+                className="inline-flex min-h-11 items-center text-accent underline-offset-4 transition-colors hover:underline"
+              >
+                {label} ↗
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
 
-      <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-4">
+      <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-5">
         {/* Honeypot field — hidden from real users, catches simple bots */}
         <input
           type="text"
@@ -96,66 +133,81 @@ export default function Contact() {
           className="hidden"
           aria-hidden="true"
         />
-        <input
-          type="text"
-          name="name"
-          placeholder="Your name"
-          required
-          className="rounded-md border border-accent/20 bg-bg-secondary px-4 py-3 text-text-primary outline-none focus:border-accent"
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Your email"
-          required
-          className="rounded-md border border-accent/20 bg-bg-secondary px-4 py-3 text-text-primary outline-none focus:border-accent"
-        />
-        <textarea
-          name="message"
-          placeholder="Your message"
-          required
-          rows={5}
-          className="rounded-md border border-accent/20 bg-bg-secondary px-4 py-3 text-text-primary outline-none focus:border-accent"
-        />
-        <Magnetic className="self-start">
-          <button
-            type="submit"
-            disabled={status === "sending"}
-            data-cursor-hover
-            className="rounded-md bg-accent px-6 py-3 font-semibold text-bg-primary transition-opacity hover:opacity-90 disabled:opacity-50"
-          >
-            {status === "sending" ? "Sending…" : "Send message"}
-          </button>
-        </Magnetic>
-
-        {status === "success" && (
-          <p className="text-accent">Thanks — your message is on its way.</p>
-        )}
-        {status === "error" && (
-          <p className="text-red-400">
-            {errorMessage} You can also reach me directly via{" "}
-            <a href={content.social.linkedin} target="_blank" rel="noreferrer" className="underline">
-              LinkedIn
-            </a>
-            .
-          </p>
-        )}
+        <div className="grid gap-5 sm:grid-cols-2">
+          <div className="flex flex-col gap-2">
+            <label htmlFor="contact-name" className={LABEL_CLASS}>
+              Name
+            </label>
+            <input
+              id="contact-name"
+              type="text"
+              name="name"
+              autoComplete="name"
+              placeholder="Ada Lovelace"
+              required
+              className={FIELD_CLASS}
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="contact-email" className={LABEL_CLASS}>
+              Email
+            </label>
+            <input
+              id="contact-email"
+              type="email"
+              name="email"
+              autoComplete="email"
+              placeholder="you@company.com"
+              required
+              className={FIELD_CLASS}
+            />
+          </div>
+        </div>
+        <div className="flex flex-col gap-2">
+          <label htmlFor="contact-message" className={LABEL_CLASS}>
+            Message
+          </label>
+          <textarea
+            id="contact-message"
+            name="message"
+            placeholder="What are you building, and where could I help?"
+            required
+            rows={6}
+            className={FIELD_CLASS}
+          />
+        </div>
+        <div className="flex flex-wrap items-center gap-4">
+          <Magnetic>
+            <button
+              type="submit"
+              disabled={status === "sending"}
+              data-cursor-hover
+              className="inline-flex min-h-12 items-center rounded-md bg-accent px-6 font-semibold text-bg-primary transition-opacity hover:opacity-90 disabled:opacity-50"
+            >
+              {status === "sending" ? "Sending…" : "Send message"}
+            </button>
+          </Magnetic>
+          <div aria-live="polite" className="text-sm">
+            {status === "success" && (
+              <p className="text-accent">Thanks — your message is on its way.</p>
+            )}
+            {status === "error" && (
+              <p className="text-danger">
+                {errorMessage} You can also reach me via{" "}
+                <a
+                  href={content.social.linkedin}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="underline"
+                >
+                  LinkedIn
+                </a>
+                .
+              </p>
+            )}
+          </div>
+        </div>
       </form>
-
-      <div className="mt-10 flex gap-6 text-accent">
-        <a href={content.social.github} target="_blank" rel="noreferrer" data-cursor-hover>
-          GitHub
-        </a>
-        <a href={content.social.linkedin} target="_blank" rel="noreferrer" data-cursor-hover>
-          LinkedIn
-        </a>
-        <a href={content.social.instagram} target="_blank" rel="noreferrer" data-cursor-hover>
-          Instagram
-        </a>
-        <a href={content.social.twitter} target="_blank" rel="noreferrer" data-cursor-hover>
-          Twitter
-        </a>
-      </div>
     </section>
   );
 }
