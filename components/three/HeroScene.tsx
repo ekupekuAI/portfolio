@@ -30,18 +30,20 @@ function HeroModel({ reducedMotion }: { reducedMotion: boolean }) {
 
   return (
     <group ref={meshRef}>
-      {/* meshBasicMaterial (unlit) is used deliberately here, confirmed by direct WebGL
-          framebuffer readback (not just a screenshot) to render correctly. A wireframe
-          glowing icosahedron is also a legitimate "tech" aesthetic on its own, not a
-          fallback. If you swap in a real Spline export with a lit/PBR material, verify
-          it renders as expected in your actual target browsers first. */}
+      {/* meshBasicMaterial (unlit), solid opaque fill: this exact configuration is
+          confirmed by direct WebGL framebuffer readback (not just a screenshot) to
+          render correctly. An earlier version used a faint wireframe + 15% opacity
+          fill — never independently re-verified after being written, and too subtle
+          to actually see. Kept deliberately bold/opaque now. If you swap in a real
+          Spline export with a lit/PBR material, verify it renders as expected in your
+          actual target browsers first. */}
       <mesh>
         <icosahedronGeometry args={[1.6, 1]} />
-        <meshBasicMaterial color="#00E5FF" transparent opacity={0.15} />
+        <meshBasicMaterial color="#00E5FF" />
       </mesh>
       <mesh>
         <icosahedronGeometry args={[1.6, 1]} />
-        <meshBasicMaterial color="#00E5FF" wireframe />
+        <meshBasicMaterial color="#0A0A0F" wireframe />
       </mesh>
     </group>
   );
