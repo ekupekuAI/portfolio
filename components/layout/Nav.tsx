@@ -8,8 +8,10 @@ import { hasRealResume } from "@/lib/hasRealResume";
 import Magnetic from "@/components/ui/Magnetic";
 
 const LINKS = [
-  { id: "about", label: "About" },
-  { id: "projects", label: "Work" },
+  { id: "thinking", label: "About" },
+  { id: "work", label: "Work" },
+  { id: "lab", label: "Lab" },
+  { id: "stack", label: "Stack" },
   { id: "contact", label: "Contact" },
 ] as const;
 
@@ -38,7 +40,7 @@ export default function Nav() {
   return (
     <header>
       <a
-        href="#about"
+        href="#thinking"
         className="sr-only left-4 top-4 z-[100] rounded-md bg-accent px-4 py-2 font-semibold text-bg-primary focus:not-sr-only focus:fixed"
       >
         Skip to content

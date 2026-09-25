@@ -20,19 +20,13 @@ function buildCommands(): Command[] {
 
   const commands: Command[] = [
     { id: "nav-hero", label: "Go to top", group: "Navigate", action: navigate("hero") },
-    { id: "nav-about", label: "Go to About", group: "Navigate", action: navigate("about") },
-    {
-      id: "nav-projects",
-      label: "Go to Projects",
-      group: "Navigate",
-      action: navigate("projects"),
-    },
-    {
-      id: "nav-contact",
-      label: "Go to Contact",
-      group: "Navigate",
-      action: navigate("contact"),
-    },
+    { id: "nav-thinking", label: "Go to About", group: "Navigate", action: navigate("thinking") },
+    { id: "nav-building", label: "Go to Currently building", group: "Navigate", action: navigate("building") },
+    { id: "nav-work", label: "Go to Work", group: "Navigate", action: navigate("work") },
+    { id: "nav-lab", label: "Go to The Lab", group: "Navigate", action: navigate("lab") },
+    { id: "nav-stack", label: "Go to Stack", group: "Navigate", action: navigate("stack") },
+    { id: "nav-journey", label: "Go to Journey", group: "Navigate", action: navigate("journey") },
+    { id: "nav-contact", label: "Go to Contact", group: "Navigate", action: navigate("contact") },
     ...(hasRealResume(content.resumeUrl)
       ? [
           {

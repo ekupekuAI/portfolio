@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { content } from "@/lib/content";
 import { useReducedMotion } from "@/lib/useReducedMotion";
 import { gsap, registerGsap } from "@/lib/animations/gsap";
+import { useReveal } from "@/lib/animations/useReveal";
 import Magnetic from "@/components/ui/Magnetic";
 
 type Status = "idle" | "sending" | "success" | "error";
@@ -14,40 +15,41 @@ const LABEL_CLASS = "text-sm text-text-secondary";
 
 export default function Contact() {
   const sectionRef = useRef<HTMLElement>(null);
-  const headingRef = useRef<HTMLDivElement>(null);
-  const formRef = useRef<HTMLFormElement>(null);
+  const outroRef = useRef<HTMLDivElement>(null);
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const reducedMotion = useReducedMotion();
+  useReveal(sectionRef);
 
+  // The final scene: the identity line grows in as the page reaches its end.
   useEffect(() => {
-    if (reducedMotion) return;
     registerGsap();
+    const outro = outroRef.current;
+    if (!outro) return;
+    if (reducedMotion) {
+      gsap.set(outro, { opacity: 1, scale: 1 });
+      return;
+    }
     const ctx = gsap.context(() => {
       gsap.fromTo(
-        [headingRef.current, formRef.current],
-        { y: 40, opacity: 0 },
+        outro,
+        { opacity: 0.15, scale: 0.9 },
         {
-          y: 0,
           opacity: 1,
-          duration: 0.8,
-          stagger: 0.15,
-          ease: "power3.out",
-          scrollTrigger: { trigger: sectionRef.current, start: "top 75%" },
+          scale: 1,
+          ease: "none",
+          scrollTrigger: { trigger: outro, start: "top 95%", end: "bottom 85%", scrub: 0.5 },
         }
       );
-    }, sectionRef);
+    }, outro);
     return () => ctx.revert();
   }, [reducedMotion]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    // Capture the form element itself synchronously, before any `await` — reading
-    // e.currentTarget again after an async gap is a known React footgun (it can be
-    // null/stale by the time execution resumes), and that's exactly what was
-    // happening here: the email was sending successfully every time, but
-    // formEl.reset() (via the stale e.currentTarget) threw, landing in the catch
-    // block and showing a false "network error" even on full success.
+    // Capture the form element synchronously, before any `await` — e.currentTarget
+    // is stale after an async gap, and a stale reset() once produced a false
+    // "network error" on a successful send.
     const formEl = e.currentTarget;
     setStatus("sending");
     setErrorMessage("");
@@ -76,8 +78,6 @@ export default function Contact() {
     } catch (err) {
       setStatus("error");
       setErrorMessage("Network error — please try again or email directly.");
-      // Surface the real cause in dev — a silently-swallowed catch is exactly what
-      // hid this bug in the first place.
       if (process.env.NODE_ENV !== "production") {
         console.error("Contact form submit failed:", err);
       }
@@ -88,126 +88,115 @@ export default function Contact() {
     <section
       ref={sectionRef}
       id="contact"
-      className="mx-auto grid max-w-6xl gap-12 px-6 py-[var(--spacing-section)] md:grid-cols-[1fr_1.1fr] md:gap-20"
+      data-scene-bg="#08080c"
+      className="mx-auto max-w-7xl px-6 pt-[var(--spacing-section)] md:px-12"
     >
-      <div ref={headingRef}>
-        <p className="text-xs uppercase tracking-[var(--tracking-label)] text-accent2">Contact</p>
-        <h2 className="mt-3 font-[family-name:var(--font-display)] text-4xl font-bold leading-[1.05] text-text-primary md:text-6xl">
-          Have a role, a hackathon team, or a hard problem?
-        </h2>
-        <p className="mt-6 max-w-md text-lg text-text-secondary">
-          Open to Software, Full-Stack, Backend, and AI Engineering internships. Messages land
-          in my inbox directly; I reply to every real one.
-        </p>
-        <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-2">
-          {(
-            [
-              ["GitHub", content.social.github],
-              ["LinkedIn", content.social.linkedin],
-              ["Twitter", content.social.twitter],
-              ["Instagram", content.social.instagram],
-            ] as const
-          ).map(([label, href]) => (
-            <li key={label}>
-              <a
-                href={href}
-                target="_blank"
-                rel="noreferrer"
-                data-cursor-hover
-                className="inline-flex min-h-11 items-center text-accent underline-offset-4 transition-colors hover:underline"
-              >
-                {label} ↗
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-5">
-        {/* Honeypot field — hidden from real users, catches simple bots */}
-        <input
-          type="text"
-          name="company"
-          tabIndex={-1}
-          autoComplete="off"
-          className="hidden"
-          aria-hidden="true"
-        />
-        <div className="grid gap-5 sm:grid-cols-2">
-          <div className="flex flex-col gap-2">
-            <label htmlFor="contact-name" className={LABEL_CLASS}>
-              Name
-            </label>
-            <input
-              id="contact-name"
-              type="text"
-              name="name"
-              autoComplete="name"
-              placeholder="Ada Lovelace"
-              required
-              className={FIELD_CLASS}
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <label htmlFor="contact-email" className={LABEL_CLASS}>
-              Email
-            </label>
-            <input
-              id="contact-email"
-              type="email"
-              name="email"
-              autoComplete="email"
-              placeholder="you@company.com"
-              required
-              className={FIELD_CLASS}
-            />
-          </div>
-        </div>
-        <div className="flex flex-col gap-2">
-          <label htmlFor="contact-message" className={LABEL_CLASS}>
-            Message
-          </label>
-          <textarea
-            id="contact-message"
-            name="message"
-            placeholder="What are you building, and where could I help?"
-            required
-            rows={6}
-            className={FIELD_CLASS}
-          />
-        </div>
-        <div className="flex flex-wrap items-center gap-4">
-          <Magnetic>
-            <button
-              type="submit"
-              disabled={status === "sending"}
-              data-cursor-hover
-              className="inline-flex min-h-12 items-center rounded-md bg-accent px-6 font-semibold text-bg-primary transition-opacity hover:opacity-90 disabled:opacity-50"
-            >
-              {status === "sending" ? "Sending…" : "Send message"}
-            </button>
-          </Magnetic>
-          <div aria-live="polite" className="text-sm">
-            {status === "success" && (
-              <p className="text-accent">Thanks — your message is on its way.</p>
-            )}
-            {status === "error" && (
-              <p className="text-danger">
-                {errorMessage} You can also reach me via{" "}
+      <div className="grid gap-12 md:grid-cols-[1fr_1.1fr] md:gap-20">
+        <div>
+          <p
+            data-reveal
+            className="flex items-center gap-3 text-xs uppercase tracking-[var(--tracking-label)] text-text-secondary opacity-0"
+          >
+            <span className="font-[family-name:var(--font-display)] tabular-nums text-accent">07</span>
+            <span aria-hidden className="h-px w-8 bg-text-secondary/30" />
+            <span>Contact</span>
+          </p>
+          <h2
+            data-reveal
+            className="mt-5 font-[family-name:var(--font-display)] text-5xl font-bold leading-[1.0] tracking-[-0.02em] text-text-primary opacity-0 md:text-7xl"
+          >
+            What are we building?
+          </h2>
+          <p data-reveal className="mt-6 max-w-md text-lg text-text-secondary opacity-0 md:text-xl">
+            Have a project, idea, or interesting problem? {content.availability}. Messages land in
+            my inbox directly.
+          </p>
+          <ul data-reveal className="mt-8 flex flex-wrap gap-x-6 gap-y-2 opacity-0">
+            {(
+              [
+                ["GitHub", content.social.github, "github"],
+                ["LinkedIn", content.social.linkedin, "open"],
+                ["Twitter", content.social.twitter, "open"],
+                ["Instagram", content.social.instagram, "open"],
+              ] as const
+            ).map(([label, href, cursor]) => (
+              <li key={label}>
                 <a
-                  href={content.social.linkedin}
+                  href={href}
                   target="_blank"
                   rel="noreferrer"
-                  className="underline"
+                  data-cursor={cursor}
+                  className="inline-flex min-h-11 items-center text-accent underline-offset-4 transition-colors hover:underline"
                 >
-                  LinkedIn
+                  {label} ↗
                 </a>
-                .
-              </p>
-            )}
-          </div>
+              </li>
+            ))}
+          </ul>
         </div>
-      </form>
+
+        <form data-reveal onSubmit={handleSubmit} className="flex flex-col gap-5 opacity-0">
+          {/* Honeypot field — hidden from real users, catches simple bots */}
+          <input type="text" name="company" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
+          <div className="grid gap-5 sm:grid-cols-2">
+            <div className="flex flex-col gap-2">
+              <label htmlFor="contact-name" className={LABEL_CLASS}>
+                Name
+              </label>
+              <input id="contact-name" type="text" name="name" autoComplete="name" placeholder="Ada Lovelace" required className={FIELD_CLASS} />
+            </div>
+            <div className="flex flex-col gap-2">
+              <label htmlFor="contact-email" className={LABEL_CLASS}>
+                Email
+              </label>
+              <input id="contact-email" type="email" name="email" autoComplete="email" placeholder="you@company.com" required className={FIELD_CLASS} />
+            </div>
+          </div>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="contact-message" className={LABEL_CLASS}>
+              Message
+            </label>
+            <textarea id="contact-message" name="message" placeholder="What are you building, and where could I help?" required rows={6} className={FIELD_CLASS} />
+          </div>
+          <div className="flex flex-wrap items-center gap-4">
+            <Magnetic>
+              <button
+                type="submit"
+                disabled={status === "sending"}
+                data-cursor-hover
+                className="inline-flex min-h-12 items-center rounded-md bg-accent px-6 font-[family-name:var(--font-display)] text-sm font-bold uppercase tracking-[0.12em] text-bg-primary transition-opacity hover:opacity-90 disabled:opacity-50"
+              >
+                {status === "sending" ? "Sending…" : "Send message"}
+              </button>
+            </Magnetic>
+            <div aria-live="polite" className="text-sm">
+              {status === "success" && <p className="text-accent">Thanks — your message is on its way.</p>}
+              {status === "error" && (
+                <p className="text-danger">
+                  {errorMessage} You can also reach me via{" "}
+                  <a href={content.social.linkedin} target="_blank" rel="noreferrer" className="underline">
+                    LinkedIn
+                  </a>
+                  .
+                </p>
+              )}
+            </div>
+          </div>
+        </form>
+      </div>
+
+      {/* Outro: the identity line, as the last thing on the page. */}
+      <div ref={outroRef} className="mt-28 pb-16 text-center md:mt-40 md:pb-24" style={{ opacity: 0.15 }}>
+        <p
+          aria-hidden
+          className="font-[family-name:var(--font-display)] text-[clamp(3.5rem,16vw,13rem)] font-bold uppercase leading-none tracking-[-0.04em] text-text-primary"
+        >
+          {content.name}
+        </p>
+        <p className="mt-4 font-[family-name:var(--font-display)] text-xs tracking-[0.35em] text-accent md:text-sm">
+          {content.tagline}
+        </p>
+      </div>
     </section>
   );
 }
