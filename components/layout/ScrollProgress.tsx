@@ -24,10 +24,10 @@ export default function ScrollProgress() {
   }, [reducedMotion]);
 
   return (
-    <div className="fixed left-0 right-0 top-0 z-[60] h-[3px] bg-bg-secondary">
+    <div className="fixed left-0 right-0 top-0 z-[60] h-[2px]">
       <div
         ref={barRef}
-        className="h-full origin-left bg-accent shadow-[0_0_8px_rgba(0,229,255,0.8)]"
+        className="h-full origin-left bg-accent"
         style={{ transform: "scaleX(0)" }}
       />
     </div>
