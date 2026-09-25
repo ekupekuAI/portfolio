@@ -4,6 +4,8 @@ import { useEffect, useRef } from "react";
 import { content } from "@/lib/content";
 import { useReducedMotion } from "@/lib/useReducedMotion";
 import { gsap, registerGsap } from "@/lib/animations/gsap";
+import ScrambleText from "@/components/ui/ScrambleText";
+import GitHubActivity from "@/components/sections/GitHubActivity";
 
 export default function About() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -63,7 +65,9 @@ export default function About() {
 
   return (
     <section ref={sectionRef} id="about" className="mx-auto max-w-3xl px-6 py-32">
-      <p className="text-sm uppercase tracking-[0.3em] text-accent2">01 — About</p>
+      <p className="text-sm uppercase tracking-[0.3em] text-accent2">
+        <ScrambleText text="01 — About" />
+      </p>
       <p
         ref={leadRef}
         className="mt-4 font-[family-name:var(--font-display)] text-3xl font-bold leading-snug text-text-primary opacity-0 md:text-5xl"
@@ -83,6 +87,7 @@ export default function About() {
           </li>
         ))}
       </ul>
+      <GitHubActivity />
     </section>
   );
 }

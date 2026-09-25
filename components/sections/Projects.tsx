@@ -6,6 +6,7 @@ import { content } from "@/lib/content";
 import { useIsMobile } from "@/lib/useIsMobile";
 import { useReducedMotion } from "@/lib/useReducedMotion";
 import { gsap, registerGsap } from "@/lib/animations/gsap";
+import ScrambleText from "@/components/ui/ScrambleText";
 
 function ProjectCard({
   project,
@@ -93,9 +94,11 @@ export default function Projects() {
   return (
     <section ref={sectionRef} id="projects" className="relative overflow-hidden py-32">
       <div className="mb-12 px-6">
-        <p className="text-sm uppercase tracking-[0.3em] text-accent2">02 — Selected Work</p>
+        <p className="text-sm uppercase tracking-[0.3em] text-accent2">
+          <ScrambleText text="02 — Selected Work" />
+        </p>
         <h2 className="mt-2 font-[family-name:var(--font-display)] text-4xl font-bold text-text-primary md:text-5xl">
-          Projects
+          <ScrambleText text="Projects" />
         </h2>
       </div>
       <div

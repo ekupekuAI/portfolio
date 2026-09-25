@@ -4,6 +4,8 @@ import { content } from "@/lib/content";
 import CustomCursor from "@/components/layout/CustomCursor";
 import ScrollProgress from "@/components/layout/ScrollProgress";
 import AmbientBackground from "@/components/layout/AmbientBackground";
+import CursorSpotlight from "@/components/layout/CursorSpotlight";
+import CommandPalette from "@/components/layout/CommandPalette";
 import "./globals.css";
 
 const display = Space_Grotesk({
@@ -20,6 +22,10 @@ const body = Inter({
 const description = `${content.bioLead} ${content.bio}`;
 
 export const metadata: Metadata = {
+  // Needed for the og:image URL to resolve to an absolute path once deployed. Set
+  // NEXT_PUBLIC_SITE_URL to the real domain when you deploy — falls back to localhost
+  // for local dev.
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
   title: `${content.name} — ${content.role}`,
   description,
   openGraph: {
@@ -36,8 +42,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         className={`${display.variable} ${body.variable} font-[family-name:var(--font-body)] bg-bg-primary text-text-primary antialiased`}
       >
         <AmbientBackground />
+        <CursorSpotlight />
         <ScrollProgress />
         <CustomCursor />
+        <CommandPalette />
         {children}
       </body>
     </html>

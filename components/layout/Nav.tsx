@@ -2,6 +2,7 @@
 
 import { content } from "@/lib/content";
 import { useActiveSection } from "@/lib/useActiveSection";
+import Magnetic from "@/components/ui/Magnetic";
 
 const SECTIONS = ["about", "projects", "contact"];
 
@@ -39,14 +40,26 @@ export default function Nav() {
         >
           Contact
         </a>
-        <a
-          href={content.resumeUrl}
-          download
+        <Magnetic>
+          <a
+            href={content.resumeUrl}
+            download
+            data-cursor-hover
+            className="block rounded-full border border-accent px-4 py-1.5 text-accent hover:bg-accent hover:text-bg-primary"
+          >
+            Resume
+          </a>
+        </Magnetic>
+        <button
+          type="button"
           data-cursor-hover
-          className="rounded-full border border-accent px-4 py-1.5 text-accent hover:bg-accent hover:text-bg-primary"
+          onClick={() => window.dispatchEvent(new CustomEvent("open-command-palette"))}
+          className="hidden items-center gap-1.5 rounded-md border border-accent/20 px-2.5 py-1 text-xs text-text-secondary hover:border-accent hover:text-accent md:flex"
+          aria-label="Open command palette"
         >
-          Resume
-        </a>
+          <span>⌘</span>
+          <span>K</span>
+        </button>
       </div>
     </nav>
   );

@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { content } from "@/lib/content";
 import { useReducedMotion } from "@/lib/useReducedMotion";
 import { gsap, registerGsap } from "@/lib/animations/gsap";
+import ScrambleText from "@/components/ui/ScrambleText";
+import Magnetic from "@/components/ui/Magnetic";
 
 type Status = "idle" | "sending" | "success" | "error";
 
@@ -65,9 +67,11 @@ export default function Contact() {
 
   return (
     <section ref={sectionRef} id="contact" className="mx-auto max-w-2xl px-6 py-32">
-      <p className="text-sm uppercase tracking-[0.3em] text-accent2">03 — Contact</p>
+      <p className="text-sm uppercase tracking-[0.3em] text-accent2">
+        <ScrambleText text="03 — Contact" />
+      </p>
       <h2 className="mt-2 font-[family-name:var(--font-display)] text-4xl font-bold text-text-primary md:text-5xl">
-        Let&apos;s Get In Touch
+        <ScrambleText text="Let's Get In Touch" />
       </h2>
 
       <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-4">
@@ -101,14 +105,16 @@ export default function Contact() {
           rows={5}
           className="rounded-md border border-accent/20 bg-bg-secondary px-4 py-3 text-text-primary outline-none focus:border-accent"
         />
-        <button
-          type="submit"
-          disabled={status === "sending"}
-          data-cursor-hover
-          className="rounded-md bg-accent px-6 py-3 font-semibold text-bg-primary transition-opacity hover:opacity-90 disabled:opacity-50"
-        >
-          {status === "sending" ? "Sending…" : "Send message"}
-        </button>
+        <Magnetic className="self-start">
+          <button
+            type="submit"
+            disabled={status === "sending"}
+            data-cursor-hover
+            className="rounded-md bg-accent px-6 py-3 font-semibold text-bg-primary transition-opacity hover:opacity-90 disabled:opacity-50"
+          >
+            {status === "sending" ? "Sending…" : "Send message"}
+          </button>
+        </Magnetic>
 
         {status === "success" && (
           <p className="text-accent">Thanks — your message is on its way.</p>
