@@ -1,3 +1,8 @@
+export interface PipelineStep {
+  label: string;
+  detail: string;
+}
+
 export interface Project {
   id: string;
   title: string;
@@ -6,20 +11,40 @@ export interface Project {
   image: string;
   liveUrl?: string;
   repoUrl?: string;
-  /** Featured projects get the large editorial row; the rest render as a compact list. */
+  /** Case-study projects get the full WORK treatment; the rest live in the Lab. */
   featured?: boolean;
-  /** One short, verifiable result line shown next to the title (prize, live demo, scale). */
+  /** One short, verifiable result line (prize, live demo, where it was built). */
   outcome?: string;
   /** Only listed where the description already states the stack; never guessed. */
   stack?: string[];
+  /** The problem, in one or two sentences, restated from the project's own description. */
+  problem?: string;
+  /** What the project does about it. */
+  solution?: string;
+  /** The system's stages, restated from the description. Revealed progressively on scroll. */
+  pipeline?: PipelineStep[];
 }
 
 export interface Highlight {
-  /** The number or short token shown large ("3rd", "200+", "17"). */
   value: string;
-  /** What the value proves, written as a sentence fragment a recruiter can verify. */
   label: string;
   href?: string;
+}
+
+export interface CapabilityGroup {
+  name: "AI" | "Software" | "Systems";
+  items: { label: string; evidence: string }[];
+}
+
+export interface StackGroup {
+  name: string;
+  items: string[];
+}
+
+export interface JourneyStep {
+  label: string;
+  title: string;
+  detail: string;
 }
 
 export interface SocialLinks {
@@ -37,41 +62,78 @@ export interface Stats {
 export interface SiteContent {
   name: string;
   role: string;
-  /** One specific sentence for the hero: what gets built, not a job title. */
+  /** The three-word identity line used in the hero and outro. */
+  tagline: string;
+  /** One specific sentence for the hero. */
   claim: string;
-  /** Plain-text availability line for the hero, no chip. */
   availability: string;
+  /** THINKING headline, two lines. */
+  thinkingHeadline: [string, string];
   bioLead: string;
   bio: string;
+  capabilities: CapabilityGroup[];
   highlights: Highlight[];
   techStack: string[];
+  stackTree: StackGroup[];
+  /** Pairs of technologies that are used together in his projects; drives hover highlighting. */
+  stackRelations: [string, string][];
+  /** Boot-sequence lines. */
+  bootLines: string[];
   projects: Project[];
+  journey: JourneyStep[];
   social: SocialLinks;
   resumeUrl: string;
   stats: Stats;
 }
 
-// NOTE: real bio (condensed from Ekansh's own written background), real tech stack
-// (self-reported + cross-checked against actual repo READMEs), real social links, and
-// real projects are set below. "AI Dropout Prediction" has no findable public repo among
-// the 17 on his GitHub — description is his own, but there's no repoUrl to link. Project
-// images are custom per-project SVG graphics (public/projects/*.svg) designed to look
-// intentional rather than like missing screenshots — swap any of them for a real
-// screenshot whenever one is available; the card layout handles either.
+// NOTE: every fact here is either Ekansh's own written background, cross-checked against
+// his public repos, or derived at runtime from GitHub (project status, key technologies,
+// Lab entries). Nothing is a marketing claim. "AI Dropout Prediction" has no findable
+// public repo among his GitHub repos — description is his own, no repoUrl to link.
+// Project images are custom SVG stand-ins (public/projects/*.svg); swap for real
+// screenshots whenever available. resumeUrl is a placeholder and the Resume button stays
+// hidden until it points at a real file.
 export const content: SiteContent = {
   name: "Ekansh",
   role: "Full-Stack Developer & AI Engineer",
-  claim:
-    "I design and ship complete systems: defense-grade ML integrity tooling, citizen-first legal AI, and the backends that hold them together.",
+  tagline: "AI × SOFTWARE × SYSTEMS",
+  claim: "I build intelligent software, from the model to the interface.",
   availability: "Open to 2026 internships",
+  thinkingHeadline: ["I don't just build interfaces.", "I build systems."],
+  bioLead:
+    "I'm a Computer Science Engineering student who builds software end-to-end — from idea and architecture to a working, deployed product.",
+  bio: "Strongest across the full loop: understanding a problem, designing the system, integrating frontend, backend, database, and AI models, debugging, shipping, and presenting it. Most effective in ambiguous problem spaces where the solution isn't handed to me.",
+  capabilities: [
+    {
+      name: "AI",
+      items: [
+        { label: "Machine learning", evidence: "AI Dropout Prediction" },
+        { label: "LLM applications", evidence: "LangChain · Ollama · RAG" },
+        { label: "Agentic workflows", evidence: "HireFlow recruiting agent" },
+      ],
+    },
+    {
+      name: "Software",
+      items: [
+        { label: "Full stack", evidence: "React · Next.js · TypeScript" },
+        { label: "Backend", evidence: "FastAPI · Node.js · Java" },
+        { label: "APIs & data", evidence: "PostgreSQL · Supabase · SQL" },
+      ],
+    },
+    {
+      name: "Systems",
+      items: [
+        { label: "Integrity & security", evidence: "TrustVision · SentinelID" },
+        { label: "Auth & hardening", evidence: "JWT, data isolation, rate limiting" },
+        { label: "Deployment", evidence: "Docker · Vercel" },
+      ],
+    },
+  ],
   highlights: [
     { value: "3rd", label: "prize at NexVerse Hackathon 2026, Aurora University" },
     { value: "200+", label: "teams in a 24-hour Blockchain + Cybersecurity hackathon" },
     { value: "17", label: "public repositories on GitHub", href: "https://github.com/ekupekuAI" },
   ],
-  bioLead:
-    "I'm a Computer Science Engineering student who builds software end-to-end — from idea and architecture to a working, deployed product.",
-  bio: "Strongest across the full loop: understanding a problem, designing the system, integrating frontend, backend, database, and AI models, debugging, shipping, and presenting it. Most effective in ambiguous problem spaces where the solution isn't handed to him. 3rd Prize, NexVerse Hackathon 2026 (Aurora University); competed in a 200+ team, 24-hour Blockchain + Cybersecurity hackathon. Currently sharpening DSA, system design, and production backend engineering — open to Software, Full-Stack, Backend, and AI Engineering internships.",
   techStack: [
     "React",
     "TypeScript",
@@ -86,17 +148,54 @@ export const content: SiteContent = {
     "Ollama",
     "RAG",
   ],
+  stackTree: [
+    { name: "AI", items: ["Python", "LangChain", "Ollama", "RAG"] },
+    { name: "Frontend", items: ["React", "Next.js", "TypeScript"] },
+    { name: "Backend", items: ["FastAPI", "Node.js", "Java"] },
+    { name: "Data", items: ["PostgreSQL", "SQL", "Supabase"] },
+    // Practices evidenced by TrustVision, SentinelID and Student Command Center, not tools.
+    { name: "Security", items: ["Model & data integrity", "Supply-chain verification", "Auth & rate limiting"] },
+  ],
+  stackRelations: [
+    ["Python", "LangChain"],
+    ["Python", "Ollama"],
+    ["Python", "FastAPI"],
+    ["LangChain", "RAG"],
+    ["Ollama", "RAG"],
+    ["React", "Next.js"],
+    ["React", "TypeScript"],
+    ["Next.js", "TypeScript"],
+    ["Node.js", "TypeScript"],
+    ["FastAPI", "PostgreSQL"],
+    ["PostgreSQL", "SQL"],
+    ["PostgreSQL", "Supabase"],
+    ["Python", "Model & data integrity"],
+    ["TypeScript", "Supply-chain verification"],
+    ["FastAPI", "Auth & rate limiting"],
+  ],
+  bootLines: ["AI SYSTEM", "WEB ENGINE", "BACKEND", "CREATIVE LAYER"],
   projects: [
     {
       id: "trustvision",
       title: "TrustVision",
-      category: "SIH Hackathon",
+      category: "AI Security & Model Trust",
       description:
         "An offline, air-gapped integrity-assurance system for defense computer-vision pipelines — verifies datasets, models, and inference outputs (duplicate/backdoor/out-of-distribution detection) and issues a signed, evidence-backed trust verdict with a tamper-proof audit log. Built for Smart India Hackathon (SIH).",
       image: "/projects/trustvision.svg",
       repoUrl: "https://github.com/ekupekuAI/AISecurity26228",
       featured: true,
-      outcome: "Smart India Hackathon build",
+      outcome: "Built for Smart India Hackathon",
+      problem:
+        "Defense computer-vision pipelines run air-gapped. There is no online service to tell an operator whether a dataset, a model, or an inference output has been duplicated, backdoored, or fed data it was never trained on.",
+      solution:
+        "An offline integrity-assurance system that inspects all three, issues a signed, evidence-backed trust verdict, and writes every decision to a tamper-proof audit log.",
+      pipeline: [
+        { label: "Ingest", detail: "Datasets, models, inference outputs" },
+        { label: "Inspect", detail: "Duplicate, backdoor, out-of-distribution detection" },
+        { label: "Verify", detail: "Integrity checks, fully offline" },
+        { label: "Decide", detail: "Signed, evidence-backed trust verdict" },
+        { label: "Audit", detail: "Tamper-proof log of every decision" },
+      ],
     },
     {
       id: "nyayapath",
@@ -108,26 +207,59 @@ export const content: SiteContent = {
       repoUrl: "https://github.com/ekupekuAI/NyayaPath",
       liveUrl: "https://nyaya-path-coral.vercel.app",
       featured: true,
-      outcome: "Live demo",
+      outcome: "Live demo on synthetic data",
+      problem:
+        "Court case updates are written for the system, not for the citizen the case is about. People cannot tell what just happened or what comes next.",
+      solution:
+        "Turns each update into a timeline, a plain-language explanation, and the next known step. Independent, synthetic demo data, and explicitly not legal advice.",
+      pipeline: [
+        { label: "Updates", detail: "Synthetic court case updates" },
+        { label: "Timeline", detail: "Ordered, readable case history" },
+        { label: "Explain", detail: "Plain-language meaning of each step" },
+        { label: "Next", detail: "The next known step, stated" },
+      ],
     },
     {
       id: "hireflow",
       title: "HireFlow",
-      category: "AI Agent Hackathon",
+      category: "AI Recruiting Agent",
       description:
         "A glass-box, bias-aware AI recruiting agent: upload a job description and resumes to get an evidence-cited ranked shortlist, auto-generated interview kits, natural-language Q&A over the candidate pool, and a Blind Mode that surfaces hiring bias. Built for the AI Agent Hackathon 2026.",
       image: "/projects/hireflow.svg",
       repoUrl: "https://github.com/ekupekuAI/Hireflow",
-      outcome: "AI Agent Hackathon 2026",
+      featured: true,
+      outcome: "Built for the AI Agent Hackathon 2026",
+      problem:
+        "Resume screening tools rank candidates without showing their evidence, and quietly carry the bias of whoever wrote the job description.",
+      solution:
+        "A glass-box agent: every ranking cites its evidence, interview kits are generated from it, the pool can be questioned in plain language, and a Blind Mode shows where bias is entering.",
+      pipeline: [
+        { label: "Input", detail: "Job description + resumes" },
+        { label: "Rank", detail: "Evidence-cited shortlist" },
+        { label: "Kit", detail: "Auto-generated interview kits" },
+        { label: "Ask", detail: "Natural-language Q&A over the pool" },
+        { label: "Blind", detail: "Bias surfaced, not hidden" },
+      ],
     },
     {
       id: "sentinel-id",
       title: "SentinelID",
-      category: "Supply Chain Security",
+      category: "Cybersecurity Intelligence",
       description:
         "A trust & verification system for AI/software supply chains — integrity checking, tamper-evidence, and traceability for the components a project depends on.",
       image: "/projects/sentinel-id.svg",
       repoUrl: "https://github.com/ekupekuAI/Sentinel-ID",
+      featured: true,
+      problem:
+        "Software and AI projects trust their dependencies by default. When a component is altered upstream, nothing downstream notices.",
+      solution:
+        "Integrity checking, tamper-evidence, and traceability for every component a project depends on.",
+      pipeline: [
+        { label: "Depend", detail: "The components a project pulls in" },
+        { label: "Check", detail: "Integrity of each component" },
+        { label: "Trace", detail: "Where it came from, what changed" },
+        { label: "Evidence", detail: "Tamper-evidence a reviewer can verify" },
+      ],
     },
     {
       id: "student-command-center",
@@ -159,6 +291,38 @@ export const content: SiteContent = {
       // No public repo found for this one — add repoUrl/liveUrl here once you have a link.
     },
   ],
+  journey: [
+    {
+      label: "Education",
+      title: "Computer Science Engineering",
+      detail: "Undergraduate, in progress. Learned by shipping alongside coursework.",
+    },
+    {
+      label: "Projects",
+      title: "First complete systems",
+      detail: "Health Record System, then Student Command Center: frontend, backend, database, auth, and an AI assistant, end to end.",
+    },
+    {
+      label: "Hackathons",
+      title: "3rd prize, NexVerse 2026",
+      detail: "Also a 200+ team, 24-hour Blockchain + Cybersecurity hackathon.",
+    },
+    {
+      label: "AI · Software · Security",
+      title: "TrustVision, HireFlow, SentinelID, NyayaPath",
+      detail: "Model integrity for defense pipelines, a glass-box recruiting agent, supply-chain trust, citizen-facing legal AI.",
+    },
+    {
+      label: "Current",
+      title: "Sharpening the fundamentals",
+      detail: "DSA, system design, and production backend engineering.",
+    },
+    {
+      label: "Next",
+      title: "Software, Full-Stack, Backend, or AI Engineering internship",
+      detail: "2026. Open to teams with hard, ambiguous problems.",
+    },
+  ],
   social: {
     github: "https://github.com/ekupekuAI",
     linkedin: "https://www.linkedin.com/in/gingamekansh/",
@@ -166,10 +330,6 @@ export const content: SiteContent = {
     twitter: "https://twitter.com/Ekanshxd",
   },
   resumeUrl: "/resume-placeholder.txt",
-  // Real, verifiable numbers only — repoCount from his actual GitHub profile,
-  // hackathonsCompeted from his own bio (NexVerse 2026 + the 200+ team blockchain/
-  // cybersecurity hackathon). projects/techStack counts are derived below, not
-  // hardcoded, so they can't drift out of sync with the arrays above.
   stats: {
     githubRepoCount: 17,
     hackathonsCompeted: 2,
