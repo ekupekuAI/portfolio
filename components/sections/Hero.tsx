@@ -1,0 +1,54 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+import { content } from "@/lib/content";
+import { useReducedMotion } from "@/lib/useReducedMotion";
+import { gsap, registerGsap } from "@/lib/animations/gsap";
+import HeroSceneLoader from "@/components/three/HeroSceneLoader";
+
+export default function Hero() {
+  const nameRef = useRef<HTMLHeadingElement>(null);
+  const roleRef = useRef<HTMLParagraphElement>(null);
+  const reducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    registerGsap();
+    const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+    if (reducedMotion) {
+      tl.set([nameRef.current, roleRef.current], { opacity: 1, y: 0 });
+      return;
+    }
+
+    tl.fromTo(
+      nameRef.current,
+      { opacity: 0, y: 40 },
+      { opacity: 1, y: 0, duration: 0.8 }
+    ).fromTo(
+      roleRef.current,
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.6 },
+      "-=0.4"
+    );
+  }, [reducedMotion]);
+
+  return (
+    <section
+      id="hero"
+      className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 text-center"
+    >
+      <div className="absolute inset-0 -z-10 opacity-80">
+        <HeroSceneLoader />
+      </div>
+      <h1
+        ref={nameRef}
+        className="font-[family-name:var(--font-display)] text-6xl font-bold tracking-tight text-text-primary opacity-0 md:text-8xl"
+      >
+        {content.name}
+      </h1>
+      <p ref={roleRef} className="mt-4 text-xl text-accent opacity-0 md:text-2xl">
+        {content.role}
+      </p>
+    </section>
+  );
+}
