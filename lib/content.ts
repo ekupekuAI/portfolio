@@ -52,6 +52,10 @@ export const content: SiteContent = {
     "Node.js",
     "LangChain",
     "Java",
+    "SQL",
+    "Supabase",
+    "Ollama",
+    "RAG",
   ],
   projects: [
     {
