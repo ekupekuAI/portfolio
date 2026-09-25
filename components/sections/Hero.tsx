@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { content } from "@/lib/content";
 import { useReducedMotion } from "@/lib/useReducedMotion";
 import { gsap, registerGsap } from "@/lib/animations/gsap";
-import HeroSceneLoader from "@/components/three/HeroSceneLoader";
+import ParticleField from "@/components/hero/ParticleField";
 
 export default function Hero() {
   const nameRef = useRef<HTMLHeadingElement>(null);
@@ -42,7 +42,7 @@ export default function Hero() {
       className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 text-center"
     >
       <div className="absolute inset-0 -z-10">
-        <HeroSceneLoader />
+        <ParticleField />
       </div>
       <h1
         ref={nameRef}

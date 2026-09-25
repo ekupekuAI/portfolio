@@ -1,7 +1,7 @@
 # Portfolio
 
-Personal portfolio site — Next.js, React Three Fiber, GSAP ScrollTrigger, Framer Motion
-(`motion`), Tailwind CSS, Resend.
+Personal portfolio site — Next.js, Canvas 2D particle-network hero, GSAP ScrollTrigger,
+Framer Motion (`motion`), Tailwind CSS, Resend.
 
 ## Development
 
@@ -25,17 +25,23 @@ fallback link (verified) rather than failing silently.
 Edit `lib/content.ts` — name, role, bio, tech stack, projects, social links, resume path
 all live there. Drop your real resume PDF in `public/`, then update `resumeUrl`.
 
-## Replacing the placeholder 3D model
+## Hero visual: Canvas 2D particle network
 
-`components/three/HeroScene.tsx` currently renders a placeholder wireframe icosahedron
-using `meshBasicMaterial` — confirmed via direct WebGL framebuffer readback to render
-correctly. If you export your Spline scene as React Three Fiber code and it uses a lit
-material (`meshStandardMaterial`, `meshPhongMaterial`, etc.), verify it actually renders
-in your target browsers before relying on it — lit materials could not be confirmed
-rendering in this project's dev/test environment (no errors were thrown; it's an
-unresolved environment-specific gap, not a known code issue). Keep the existing
-mouse-tracking and reduced-motion wiring in `HeroModel` regardless of which material you
-use.
+`components/hero/ParticleField.tsx` draws a mouse-reactive particle network using the
+plain 2D Canvas API. This replaces an earlier React Three Fiber / three.js hero scene
+that had a real, never-fully-explained rendering bug: content that read as correct via
+direct WebGL framebuffer readback in an actual browser still never became visible on
+screen, across several fix attempts. Canvas 2D has a much smaller surface for that class
+of bug — no WebGL context creation, driver quirks, z-fighting, or tone-mapping — so what
+you draw is what appears.
+
+Tune it by editing the constants at the top of `ParticleField.tsx`:
+`PARTICLE_COUNT`, `CONNECT_DISTANCE`, `MOUSE_CONNECT_DISTANCE`, `ACCENT_RGB`.
+
+If you'd rather go back to a 3D/WebGL hero (e.g. a real exported Spline scene), reinstall
+`three` + `@react-three/fiber`, and thoroughly verify it actually renders in every target
+browser before shipping it — that verification is exactly where the previous attempt fell
+short.
 
 ## Testing
 
