@@ -2,6 +2,11 @@ import { NextResponse } from "next/server";
 import { content } from "@/lib/content";
 import { githubUsername } from "@/lib/githubUsername";
 import { repoNameFromUrl } from "@/lib/repoStatus";
+import { preflight, withCors } from "@/lib/cors";
+
+export function OPTIONS(request: Request) {
+  return preflight(request);
+}
 
 export interface RepoSummary {
   name: string;
@@ -48,10 +53,13 @@ async function fetchLanguages(
  * page is hand-typed marketing. Works without a token (public data) but uses one
  * when present to avoid the anonymous rate limit.
  */
-export async function GET() {
+export async function GET(request: Request) {
   const username = githubUsername(content.social.github);
   if (!username) {
-    return NextResponse.json({ ok: false, error: "No GitHub profile configured." }, { status: 501 });
+    return withCors(
+      NextResponse.json({ ok: false, error: "No GitHub profile configured." }, { status: 501 }),
+      request
+    );
   }
   const token = process.env.GITHUB_TOKEN;
   const headers: HeadersInit = {
@@ -65,9 +73,9 @@ export async function GET() {
       { headers, next: { revalidate: 3600 } }
     );
     if (!res.ok) {
-      return NextResponse.json(
-        { ok: false, error: `GitHub API responded with ${res.status}.` },
-        { status: 502 }
+      return withCors(
+        NextResponse.json({ ok: false, error: `GitHub API responded with ${res.status}.` }, { status: 502 }),
+        request
       );
     }
     const raw = (await res.json()) as Array<{
@@ -99,8 +107,8 @@ export async function GET() {
     );
     const languages = Object.fromEntries(languageEntries);
 
-    return NextResponse.json({ ok: true, repos, languages });
+    return withCors(NextResponse.json({ ok: true, repos, languages }), request);
   } catch {
-    return NextResponse.json({ ok: false, error: "Failed to reach GitHub." }, { status: 502 });
+    return withCors(NextResponse.json({ ok: false, error: "Failed to reach GitHub." }, { status: 502 }), request);
   }
 }

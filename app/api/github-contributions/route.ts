@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { content } from "@/lib/content";
 import { githubUsername } from "@/lib/githubUsername";
+import { preflight, withCors } from "@/lib/cors";
 
 const QUERY = `
   query($login: String!) {
@@ -20,14 +21,18 @@ const QUERY = `
   }
 `;
 
-export async function GET() {
+export function OPTIONS(request: Request) {
+  return preflight(request);
+}
+
+export async function GET(request: Request) {
   const token = process.env.GITHUB_TOKEN;
   const username = githubUsername(content.social.github);
 
   if (!token || !username) {
-    return NextResponse.json(
-      { ok: false, error: "GitHub contributions are not configured." },
-      { status: 501 }
+    return withCors(
+      NextResponse.json({ ok: false, error: "GitHub contributions are not configured." }, { status: 501 }),
+      request
     );
   }
 
@@ -45,26 +50,23 @@ export async function GET() {
     });
 
     if (!res.ok) {
-      return NextResponse.json(
-        { ok: false, error: `GitHub API responded with ${res.status}.` },
-        { status: 502 }
+      return withCors(
+        NextResponse.json({ ok: false, error: `GitHub API responded with ${res.status}.` }, { status: 502 }),
+        request
       );
     }
 
     const data = await res.json();
     const calendar = data?.data?.user?.contributionsCollection?.contributionCalendar;
     if (!calendar) {
-      return NextResponse.json(
-        { ok: false, error: "Unexpected response shape from GitHub." },
-        { status: 502 }
+      return withCors(
+        NextResponse.json({ ok: false, error: "Unexpected response shape from GitHub." }, { status: 502 }),
+        request
       );
     }
 
-    return NextResponse.json({ ok: true, calendar });
+    return withCors(NextResponse.json({ ok: true, calendar }), request);
   } catch {
-    return NextResponse.json(
-      { ok: false, error: "Failed to reach GitHub." },
-      { status: 502 }
-    );
+    return withCors(NextResponse.json({ ok: false, error: "Failed to reach GitHub." }, { status: 502 }), request);
   }
 }
